@@ -1,0 +1,205 @@
+<html>
+<head>
+	<style>
+		td
+		{
+			width:2vw;
+			height:2vw;
+		}
+	</style>
+</head>
+	<body onload="createBoard()" >
+		<table name="table" border="0" style="background-color:black;" cellspacing="0"><tr name="row"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
+	</body>
+	<script>
+	var row_count;
+	var col_count=document.getElementsByName("row")[0].childNodes.length;
+	var max_snake_len;
+	var snake1;
+	var snake2;
+				
+		function init_snake()
+		{
+			snake1= {
+						uid:"",
+						body:[{x:0,y:0}],
+						//body:new array(),
+						color:"red",
+						direction:39
+					};
+			snake2= {
+						uid:"",
+						//body:bodyparts[max_snake_len],
+						body:[{x:0,y:0}],
+						color:"blue",
+						direction:37
+					};		
+			let i;
+			let x=parseInt(row_count/2),y=2;
+			snake1.body.pop();
+			for(i=0;i<3;i++,y--)
+			{
+				let bodypart=new Object();
+				bodypart.x=x;
+				bodypart.y=y;
+				snake1.body.push(bodypart);
+			}
+			x=parseInt((row_count/2)+1);
+			y=col_count-3;
+			snake2.body.pop();
+			for(i=0;i<3;i++,y++)
+			{
+				let bodypart=new Object();
+				bodypart.x=x;
+				bodypart.y=y;
+				snake2.body.push(bodypart);
+			}
+			for(i=0;i<3;i++)
+				console.log("snake 1 body "+snake1.body[i].x+" "+snake1.body[i].y+"\nsnake 2 body "+snake2.body[i].x+" "+snake2.body[i].y);
+			init_board();
+		}
+		
+		function init_board()
+		{
+			let i;
+			let rows;
+			rows=document.getElementsByName("row");
+			console.log("called init board");
+			for(i=0;i<3;i++)
+			{
+				console.log("enter loop");
+				rows[snake1.body[i].x].childNodes[snake1.body[i].y].style.backgroundColor=snake1.color;
+				rows[snake2.body[i].x].childNodes[snake2.body[i].y].style.backgroundColor=snake2.color;
+			}
+		}
+		
+		function createBoard()
+		{
+			console.log("called createBoard!!");
+			var table=document.getElementsByName("table")[0];
+			var row=document.getElementsByName("row")[0];
+			
+			var i;
+			for(i=0;i<24;i++)
+			{
+			let newrow=row.cloneNode(true);
+				table.appendChild(newrow);
+			}
+			row_count=document.getElementsByName("row").length;
+			max_snake_len=row_count*col_count;
+			console.log("row_count = "+row_count+"\ncol_count = "+col_count);
+			init_snake();
+			start_snake_action();
+		}
+		
+		function nextmove()
+		{
+			let i;
+			
+			let rows=document.getElementsByName("row");
+			rows[snake1.body[snake1.body.length-1].x].childNodes[snake1.body[snake1.body.length-1].y].style.backgroundColor="transparent";
+			rows[snake2.body[snake2.body.length-1].x].childNodes[snake2.body[snake2.body.length-1].y].style.backgroundColor="transparent";
+			for(i=snake1.body.length-1;i>0;i--)
+			{
+				snake1.body[i].x=snake1.body[i-1].x;
+				snake1.body[i].y=snake1.body[i-1].y;
+			}
+			
+			for(i=snake2.body.length-1;i>0;i--)
+			{
+				snake2.body[i].x=snake2.body[i-1].x;
+				snake2.body[i].y=snake2.body[i-1].y;
+			}
+			
+			switch(snake1.direction)
+			{
+				case 37:
+						if(snake1.body[0].y<=0)
+						{
+							snake1.body[0].y=col_count-1;
+						}
+						else
+						{
+							snake1.body[0].y--;
+						}
+						break;
+				case 38:
+						if(snake1.body[0].x<=0)
+						{
+							snake1.body[0].x=row_count-1;
+						}
+						else
+						{
+							snake1.body[0].x--;
+						}
+						break;
+				case 39:
+						snake1.body[0].y=(snake1.body[0].y+1)%col_count;
+						break;
+				case 40:
+						snake1.body[0].x=(snake1.body[0].x+1)%row_count;
+						break;						
+			}
+			
+			switch(snake2.direction)
+			{
+				case 37:
+						if(snake2.body[0].y<=0)
+						{
+							snake2.body[0].y=col_count-1;
+						}
+						else
+						{
+							snake2.body[0].y--;
+						}
+						break;
+				case 38:
+						if(snake2.body[0].x<=0)
+						{
+							snake2.body[0].x=row_count-1;
+						}
+						else
+						{
+							snake2.body[0].x--;
+						}
+						break;
+				case 39:
+						snake2.body[0].y=(snake2.body[0].y+1)%col_count;
+						break;
+				case 40:
+						snake2.body[0].x=(snake2.body[0].x+1)%row_count;
+						break;						
+			}
+			redraw_snakes();
+		}
+		
+		function redraw_snakes()
+		{
+			let i;
+			let rows=document.getElementsByName("row");
+			for(i=0;i<snake1.body.length;i++)
+			{
+				rows[snake1.body[i].x].childNodes[snake1.body[i].y].style.backgroundColor=snake1.color;
+				
+			}
+			
+			for(i=0;i<snake2.body.length;i++)
+			{
+				rows[snake2.body[i].x].childNodes[snake2.body[i].y].style.backgroundColor=snake2.color;
+			}
+		}
+		
+		function start_snake_action()
+		{
+			setInterval(nextmove,110);
+		}
+		
+		document.onkeydown=function(e)
+		{
+		//alert(e.keyCode);
+		var code=e.keyCode;
+		if(code==37||code==38||code==39||code==40)
+			snake1.direction=e.keyCode;
+		}
+	</script>
+</html>
