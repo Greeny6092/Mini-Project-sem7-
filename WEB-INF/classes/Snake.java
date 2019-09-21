@@ -7,13 +7,15 @@ import java.util.*;
 public class Snake extends HttpServlet
 {
 	String color=new String();
+	int move;
+	int addflag=0,removeflag=0,position=0;
 	Queue<Integer> moveQueue=new LinkedList<Integer>();
 	ArrayList<BodyParts> bodyparts=new ArrayList<BodyParts>();
 	public Snake(String color,int initialdir)
 	{
 		//this.uid=uid;
 		this.color=color;
-		moveQueue.add(initialdir);
+		move=initialdir;
 	}
 	
 	public void addNewBodyPart()
@@ -171,18 +173,7 @@ public class Snake extends HttpServlet
 	
 	public int getLast()
 	{
-		int i,size;
-		Iterator it=moveQueue.iterator();
-		i=0;
-		size=moveQueue.size();
-		size--;
-		while(i!=size)
-		{
-			it.next();
-			i++;
-		}
-		
-		return (int)it.next();
+		return move;
 	}
 	
 	class BodyParts

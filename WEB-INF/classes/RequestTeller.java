@@ -31,6 +31,7 @@ public class RequestTeller extends HttpServlet
 		{
 			out.write("event:gamestartflag\n"); 
 			out.write("data: "+u.status+","+u.cur_gameboard_id+"\n\n");
+			out.write("retry: 110\n");
 		}
 	}
 	

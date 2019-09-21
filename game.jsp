@@ -4,8 +4,8 @@
 <style>
 	td
 	{
-		width:3vw;
-		height:1vh;
+		width:2vw;
+		height:2vh;
 
 	}
 	button
@@ -25,8 +25,8 @@
 	
 </style>
 </head>
-<body onload="createboard()">
-<div style="position:fixed;float:right;display:none;" name="control_board">
+<body onload="createBoard()">
+<!--<div style="position:fixed;float:right;display:none;" name="control_board">
 	<table style="background-color:rgba(255,255,255,0.3);border-radius:2vw;">
 	<tr>
 	<td></td>
@@ -43,14 +43,12 @@
 	<td></td>	
 	</tr>
 	</table>
-	</div>
+	</div>-->
 	<div id="liveuserbox">
 	</div>
 	<div>
 		<center>
-			<table border="0" name="gameboard" style="border:6px solid black">
-				<tr name="row"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-			</table>
+			<table name="table" border="1" style="background-color:black;" cellspacing="1"><tr name="row"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
 		</center>
 	</div>
 	<div id="requestbox">
@@ -59,26 +57,12 @@
 		</tr>
 	</table>
 	</div>
-	<input type="text" onclick="setMove(this.value)" name="input" hidden>
 	<script>
 		
 		var id;
 		var gamestartflag=0;
 		var gameboard_id;
-		function createboard()
-		{
-			id=sessionStorage.getItem('id');
-			//alert("id is "+id);
-			var gameboard=document.getElementsByName("gameboard")[0];
-			var row=document.getElementsByName("row")[0];
-			//alert(row.childNodes.length);
-			for(i=0;i<80;i++)
-			{
-				let newrow=row.cloneNode(true);
-				gameboard.appendChild(newrow);
-			}
-			get_live_users();
-		}
+		var foodcolor="green";
 		function get_live_users()
 		{
 			var liveusers=document.getElementById("liveuserbox");
@@ -86,20 +70,13 @@
 			var source = new EventSource('./LiveUserLister'); 
 			 source.onmessage=function(event)
             {
-				//alert(event.data);
-                //liveusers.innerHTML="<span style='float:right'><button onclick='this.parentNode.display=none'>CLOSE</button></span>";
 				liveusers.innerHTML="";
 				let ids=event.data.split("$")[0].split(",");
 				let names=event.data.split("$")[1].split(",");
 				for(i=1;i<ids.length;i++)
 				{
-					//alert("loop "+ids[i]+" s");
-					//ids[i]=ids[i].replace(/(\r\n|\n|\r)/gm,"");
-					//ids[i]=ids[i].trim();
 					let temp=ids[i];
-					////alert(ids[i].replace(/(\r\n|\n|\r)/gm,"")+" "+ids[i].trim());
-					////alert(id+" "+ids[i].replace(/(\r\n|\n|\r)/gm," ").trim());
-					////alert(id+temp.replace(/(\r\n|\n|\r)/gm," ").trim()+" "+ids[i].includes(id.toString()));
+					
 					if(!(ids[i].includes(id)))
 					{
 						//alert("list");
@@ -141,20 +118,31 @@
 					//confirm("You got request from "+);
 			})
 			
-			source.addEventListener("gamestartflag",function(event)
+			source.addEventListener("gamestartflag",startflag=function(event)
             {
 				console.log(event.data);
+				var temp=gamestartflag;
 					gamestartflag=event.data.split(",")[0];
 					if(gamestartflag==1)
 					{
 						document.getElementById("requestbox").style.display="none";
 						gameboard_id=event.data.split(",")[1];
-						document.getElementsByName("control_board")[0].style.display="inline-block";
+						//document.getElementsByName("control_board")[0].style.display="inline-block";
+						document.getElementsByName("table")[0].style.display="inline-block";
+						init_board();
+						if(gamestartflag!=temp)
+						{
+							start_snake_action();
+							console.log("called start_snake_action");
+						}
 						listentogameboard();
+						
+						source.removeEventListener("gamestartflag",startflag);
 					}
 					//console.log("game board id is "+gameboard_id+"gameflag is "+gamestartflag);
 					
             })
+			
 		}
 		
 		function challenge(id2)
@@ -165,6 +153,7 @@
 				  if (this.readyState == 4 && this.status == 200) 
 				  {
 					//id = this.responseText;
+					mysnake=snake1;
 					alert("challenge request sent!!!");
 				  }
 				};
@@ -182,10 +171,11 @@
 				  if (this.readyState == 4 && this.status == 200) 
 				  {
 					//id = this.responseText;
+					mysnake=snake2;
 					console.log("accepted!!!");
 				  }
 				};
-				xhttp.open("GET", "./getid?u1="+id+"&u2="+u2+"&t=2&accept="+accept, false);
+				xhttp.open("GET", "./getid?u1="+id+"&u2="+u2+"&t=2&accept="+accept+"&row_count="+row_count+"&col_count="+col_count, false);
 				xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 				xhttp.send();
 		}
@@ -198,124 +188,377 @@
             {
 				var rows=document.getElementsByName("row");
 				
-				//console.log("got game board status !!! "+event.data+" length "+event.data.length);
+				console.log("got game board status !!! "+event.data+" length "+event.data.length);
 				let data=event.data.split("$");
-				/*for(i=0;i<data.length-1;i++)
+				snake1.direction=parseInt(data[0]);
+				snake2.direction=parseInt(data[1]);
+				console.log(data[2].length);
+				let x=parseInt(data[2].split(",")[0]);
+				let y=parseInt(data[2].split(",")[1]);
+				if(x!=-1&&y!=-1)
 				{
-					if(data[i]==0)
-					{
-						console.log("i is "+i+" i/12 is "+parseInt(1/12)+" i%12 is "+(i%12));
-						rows[parseInt(i/12)].childNodes[i%12].setAttribute("style","background-color:red");
-						//console.log(rows[0].childNodes[0].nodeType);
-					}
-					else if(data[i]==1)
-					{
-						
-						rows[parseInt(i/12)].childNodes[i%12].setAttribute("style","background-color:blue");
-					}
-					else if(data[i]==2)
-					{
-						rows[parseInt(i/12)].childNodes[i%12].setAttribute("style","background-color:white");
-						
-					}
-				}*/
-				//clearBoard();
-				if(data.length>2)
-				{
-					let xy=data[2].split(",");
-					rows[parseInt(xy[0])].childNodes[parseInt(xy[1])].setAttribute("style","background-color:yellow");
+					let row=document.getElementsByName("row");
+					row[x].childNodes[y].style.backgroundColor=foodcolor;
 				}
-				
-				if(blue!=null)
+				let addflags=data[3].split(",");
+				if(addflags[0]==1)
 				{
-					console.log("clearing");
-					for(i=0;i<blue.length-1;i+=2)
-					{
-						rows[parseInt(blue[i])].childNodes[parseInt(blue[i+1])].setAttribute("style","background-color:white");
-					}
+					addBodyPart(1);
 				}
-				blue=data[0].split(",");
-				for(i=0;i<blue.length-1;i+=2)
+				if(addflags[1]==1)
 				{
-					rows[parseInt(blue[i])].childNodes[parseInt(blue[i+1])].setAttribute("style","background-color:blue");
+					addBodyPart(2);
 				}
-				
-
-				if(red!=null)
-				{
-					console.log("clearing");
-					for(i=0;i<red.length-1;i+=2)
-					{
-						rows[parseInt(red[i])].childNodes[parseInt(red[i+1])].setAttribute("style","background-color:white");
-					}
-				}
-				red=data[1].split(",");
-				for(i=0;i<red.length-1;i+=2)
-				{
-					rows[parseInt(red[i])].childNodes[parseInt(red[i+1])].setAttribute("style","background-color:red");
-				}
-
-				document.getElementsByName("input")[0].value="";
-				document.getElementsByName("input")[0].focus();
             })			
 		}
 		
-		function clearBoard()
+
+
+
+
+	var row_count;
+	var col_count=document.getElementsByName("row")[0].childNodes.length;
+	var max_snake_len;
+	var snake1;
+	var snake2;
+	var mysnake;			
+		function init_snake()
 		{
-			let table=document.getElementsByName("gameboard")[0];
-			//let innertable=document.getElementsByName("gameboard")[0].childNodes[0].cloneNode(true);
-			table.innerHTML="<tr name='row'><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
-			//createboard();
-			//table.appendChild(innertable);
-			//var gameboard=document.getElementsByName("gameboard")[0];
-			//var row=document.getElementsByName("row")[0];
-			for(i=0;i<80;i++)
+			snake1= {
+						uid:"",
+						body:[{x:0,y:0}],
+						//body:new array(),
+						color:"red",
+						direction:39
+					};
+			snake2= {
+						uid:"",
+						//body:bodyparts[max_snake_len],
+						body:[{x:0,y:0}],
+						color:"blue",
+						direction:37
+					};		
+			let i;
+			let x=parseInt(row_count/2),y=2;
+			snake1.body.pop();
+			for(i=0;i<3;i++,y--)
 			{
-				//let newrow=row.cloneNode(false);
-				//gameboard.appendChild(newrow);
-				table.innerHTML+="<tr name='row'><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
+				let bodypart=new Object();
+				bodypart.x=x;
+				bodypart.y=y;
+				snake1.body.push(bodypart);
+			}
+			x=parseInt((row_count/2)+1);
+			y=col_count-3;
+			snake2.body.pop();
+			for(i=0;i<3;i++,y++)
+			{
+				let bodypart=new Object();
+				bodypart.x=x;
+				bodypart.y=y;
+				snake2.body.push(bodypart);
+			}
+			for(i=0;i<3;i++)
+			console.log("snake 1 body "+snake1.body[i].x+" "+snake1.body[i].y+"\nsnake 2 body "+snake2.body[i].x+" "+snake2.body[i].y);
+			init_board();
+		}
+		
+		function init_board()
+		{
+			let i;
+			let rows;
+			rows=document.getElementsByName("row");
+			console.log("called init board");
+			for(i=0;i<3;i++)
+			{
+				console.log("enter loop");
+				rows[snake1.body[i].x].childNodes[snake1.body[i].y].style.backgroundColor=snake1.color;
+				rows[snake2.body[i].x].childNodes[snake2.body[i].y].style.backgroundColor=snake2.color;
 			}
 		}
 		
-		function setMove(m)
+		function createBoard()
 		{
-			//alert(parseInt(m));
-			//alert("Entered");
-			let move=parseInt(m);
-				var xhttp = new XMLHttpRequest();
-				xhttp.onreadystatechange = function() 
-				{
-				  if (this.readyState == 4 && this.status == 200) 
-				  {
-					//id = this.responseText;
-					//console.log("move placed to moveQueue");
-				  }
-				};
-				xhttp.open("GET", "./getid?uid="+id+"&move="+move+"&gid="+gameboard_id+"&t=3", false);
-				xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-				xhttp.send();
+			
+			console.log("called createBoard!!");
+			id=sessionStorage.getItem('id');
+			//alert("id is "+id);
+			var gameboard=document.getElementsByName("gameboard")[0];
+			var row=document.getElementsByName("row")[0];
+			var table=document.getElementsByName("table")[0];
+			var row=document.getElementsByName("row")[0];
+			
+			var i;
+			for(i=0;i<45;i++)
+			{
+				let newrow=row.cloneNode(true);
+				table.appendChild(newrow);
+			}
+			table.style.display="none";
+			row_count=document.getElementsByName("row").length;
+			max_snake_len=row_count*col_count;
+			console.log("row_count = "+row_count+"\ncol_count = "+col_count);
+			get_live_users();
+			init_snake();
+			//start_snake_action();
+		}
+		
+		function nextmove()
+		{
+			let i;
+			
+			let rows=document.getElementsByName("row");
+			rows[snake1.body[snake1.body.length-1].x].childNodes[snake1.body[snake1.body.length-1].y].style.backgroundColor="transparent";
+			rows[snake2.body[snake2.body.length-1].x].childNodes[snake2.body[snake2.body.length-1].y].style.backgroundColor="transparent";
+			for(i=snake1.body.length-1;i>0;i--)
+			{
+				snake1.body[i].x=snake1.body[i-1].x;
+				snake1.body[i].y=snake1.body[i-1].y;
+			}
+			
+			for(i=snake2.body.length-1;i>0;i--)
+			{
+				snake2.body[i].x=snake2.body[i-1].x;
+				snake2.body[i].y=snake2.body[i-1].y;
+			}
+			
+			switch(snake1.direction)
+			{
+				case 37:
+						if(snake1.body[0].y<=0)
+						{
+							snake1.body[0].y=col_count-1;
+						}
+						else
+						{
+							snake1.body[0].y--;
+						}
+						break;
+				case 38:
+						if(snake1.body[0].x<=0)
+						{
+							snake1.body[0].x=row_count-1;
+						}
+						else
+						{
+							snake1.body[0].x--;
+						}
+						break;
+				case 39:
+						snake1.body[0].y=(snake1.body[0].y+1)%col_count;
+						break;
+				case 40:
+						snake1.body[0].x=(snake1.body[0].x+1)%row_count;
+						break;						
+			}
+			if(rows[snake1.body[0].x].childNodes[snake1.body[0].y].style.backgroundColor==foodcolor)
+			{
+				reportmysnakestatus(1,0,gameboard_id,1);
+			}
+			switch(snake2.direction)
+			{
+				case 37:
+						if(snake2.body[0].y<=0)
+						{
+							snake2.body[0].y=col_count-1;
+						}
+						else
+						{
+							snake2.body[0].y--;
+						}
+						break;
+				case 38:
+						if(snake2.body[0].x<=0)
+						{
+							snake2.body[0].x=row_count-1;
+						}
+						else
+						{
+							snake2.body[0].x--;
+						}
+						break;
+				case 39:
+						snake2.body[0].y=(snake2.body[0].y+1)%col_count;
+						break;
+				case 40:
+						snake2.body[0].x=(snake2.body[0].x+1)%row_count;
+						break;						
+			}
+			
+			if(rows[snake2.body[0].x].childNodes[snake2.body[0].y].style.backgroundColor==foodcolor)
+			{
+				reportmysnakestatus(1,0,gameboard_id,2);
+			}
+			redraw_snakes();
+		}
+		
+		function redraw_snakes()
+		{
+			let i;
+			let rows=document.getElementsByName("row");
+			for(i=0;i<snake1.body.length;i++)
+			{
+				rows[snake1.body[i].x].childNodes[snake1.body[i].y].style.backgroundColor=snake1.color;
+				
+			}
+			
+			for(i=0;i<snake2.body.length;i++)
+			{
+				rows[snake2.body[i].x].childNodes[snake2.body[i].y].style.backgroundColor=snake2.color;
+			}
+		}
+		
+		function start_snake_action()
+		{
+			//alert("gameboard id "+gameboard_id);
+			setInterval(nextmove,110);
 		}
 		
 		document.onkeydown=function(e)
 			{
 				//alert(e.keyCode);
 				let move=e.keyCode
-				if((move==37||move==38||move==39||move==40)&&(gamestartflag==1))
+				let diff=move-mysnake.direction;
+				if((move==37||move==38||move==39||move==40)&&(gamestartflag==1)&&(diff!=2&&diff!=2))
 				{
 					var xhttp = new XMLHttpRequest();
 					xhttp.onreadystatechange = function() 
 					{
 					  if (this.readyState == 4 && this.status == 200) 
 					  {
-						//id = this.responseText;
-						//console.log("move placed to moveQueue");
+						mysnake.direction=move;
 					  }
 					};
-					xhttp.open("GET", "./getid?uid="+id+"&move="+e.keyCode+"&gid="+gameboard_id+"&t=3", false);
+					xhttp.open("GET", "./getid?uid="+id+"&move="+e.keyCode+"&gid="+gameboard_id+"&t=3", true);
 					xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 					xhttp.send();
 				}
 			}
+			
+		function food_acquired()
+		{
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() 
+			{
+			  if (this.readyState == 4 && this.status == 200) 
+			  {
+				//mysnake.direction=move;
+			  }
+			};
+			xhttp.open("GET", "./getid?uid="+id+"&gid="+gameboard_id+"&t=4", true);
+			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhttp.send();
+		}
+		
+		function reportmysnakestatus(operation,position,gid,uno)
+		{
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() 
+			{
+			  if (this.readyState == 4 && this.status == 200) 
+			  {
+				//mysnake.direction=move;
+			  }
+			};
+			xhttp.open("GET", "./getid?uid="+id+"&gid="+gameboard_id+"&operation="+operation+"&position="+position+"&gid="+gid+"&uno="+uno+"&t=5", true);
+			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhttp.send();
+		}
+		
+		function addBodyPart(n)
+		{
+			if(n==1)
+			{
+				//alert("got food snake1");
+				let prev=snake1.body[snake1.body.length-1];
+				let bodypart=new Object();
+				switch(snake1.direction)
+				{
+					case 37:
+						bodypart.x=prev.x;
+						bodypart.y=(prev.y+1)%col_count;
+						//alert("snake1 37");
+						break;
+					case 38:
+						bodypart.y=prev.y;
+						bodypart.x=(prev.x+1)%row_count;
+						//alert("snake1 38");
+						break;
+					case 39:
+					bodypart.x=prev.x;
+						if(prev.y<=0)
+						{
+							bodypart.y=col_count-1;
+						}
+						else
+						{
+							bodypart.y=prev.y-1;
+						}
+						//alert("snake1 39");
+						break;
+					case 40:
+						bodypart.y=prev.y;
+						if(prev.x<=0)
+						{
+							bodypart.x=row_count-1;
+						}
+						else
+						{
+							bodypart.x=prev.x-1;
+						}
+						//alert("snake1 40");
+						break;	
+				}
+				snake1.body.push(bodypart);
+				food_acquired();
+			}
+			else if(n==2)
+			{
+				//alert("got food snake2");
+				let prev=snake2.body[snake2.body.length-1];
+				let bodypart=new Object();
+				switch(snake2.direction)
+				{
+					case 37:
+						bodypart.x=prev.x;
+						bodypart.y=(prev.y+1)%col_count;
+						//alert("snake2 37");
+						break;
+					case 38:
+						bodypart.y=prev.y;
+						bodypart.x=(prev.x+1)%row_count;
+						//alert("snake2 38");
+						break;
+					case 39:
+					bodypart.x=prev.x;
+						if(prev.y<=0)
+						{
+							bodypart.y=col_count-1;
+						}
+						else
+						{
+							bodypart.y=prev.y-1;
+						}
+						//alert("snake2 39");
+						break;
+					case 40:
+						bodypart.y=prev.y;
+						if(prev.x<=0)
+						{
+							bodypart.x=row_count-1;
+						}
+						else
+						{
+							bodypart.x=prev.x-1;
+						}
+						//alert("snake2 40");
+						break;	
+				}
+				snake2.body.push(bodypart);
+				food_acquired();
+				
+			}
+		}
 	</script>
 </body>
 </html>

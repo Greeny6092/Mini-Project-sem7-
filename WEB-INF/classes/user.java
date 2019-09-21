@@ -36,6 +36,12 @@ public class user extends HttpServlet
 			}
 		}
 	}
+	void resetSnakeFlags()
+	{
+		snake.addflag=0;
+		snake.position=0;
+		snake.removeflag=0;
+	}
 	public void doGet(HttpServletRequest req,HttpServletResponse res)throws IOException,ServletException
 	{	
 	

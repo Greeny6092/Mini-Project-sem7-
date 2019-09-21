@@ -10,9 +10,10 @@ public class gameboard extends HttpServlet
 	user u2;
 	int status,cur_u1_move,cur_u2_move;
 	int gameboard_id;
+	int row_count,col_count;
 	static int gameboard_count=0;
 	int matrix[][]=new int[10][12];
-	
+	int foodstatus=0;
 	public void init()
 	{
 		/*for(int i=0;i<10;i++)
@@ -65,10 +66,12 @@ public class gameboard extends HttpServlet
 		}
 		return output;
 	}
-	public gameboard(user u1,user u2)
+	public gameboard(user u1,user u2,int row_count,int col_count)
 	{
 		this.u1=u1;
 		this.u2=u2;
+		this.row_count=row_count;
+		this.col_count=col_count;
 		this.u1.snake=new Snake("red",39);
 		this.u2.snake=new Snake("blue",37);
 		status=1;
