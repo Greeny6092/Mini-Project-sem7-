@@ -14,39 +14,8 @@ public class gameboard extends HttpServlet
 	static int gameboard_count=0;
 	int matrix[][]=new int[10][12];
 	int foodstatus=0;
-	public void init()
-	{
-		/*for(int i=0;i<10;i++)
-		{
-			for(int j=0;j<12;j++)
-			{
-				if(i==4&&j<2)
-				{
-					matrix[i][j]=0;
-				}
-				else if(i==4&&j==2)
-				{
-					matrix[i][j]=3;
-				}
-				else if(i==5&&j>9)
-				{
-					matrix[i][j]=1;
-				}
-				else if(i==5&&j==9)
-				{
-					matrix[i][j]=4;
-				}
-				else
-				{
-					matrix[i][j]=2;
-				}
-			}
-		}*/
-		
-		u1.snake.setPosition(1);
-		u2.snake.setPosition(2);
-	}
-	
+	int pauseflag=1;
+	int calibrate_flag=1;
 	public void nextMove()
 	{
 				

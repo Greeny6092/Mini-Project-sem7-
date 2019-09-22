@@ -3,6 +3,8 @@ import javax.servlet.http.*;
 import java.sql.*;
 import java.io.*;
 import java.util.*;
+import org.json.*;
+
 
 public class getid extends HttpServlet
 {
@@ -39,19 +41,23 @@ public class getid extends HttpServlet
 			int u1,u2;
 			u1=Integer.parseInt(req.getParameter("u1"));
 			u2=Integer.parseInt(req.getParameter("u2"));
+			String s1,s2;
 			if(accept==1)
 			{
 				int row_count,col_count;
 				row_count=Integer.parseInt(req.getParameter("row_count"));
 				col_count=Integer.parseInt(req.getParameter("col_count"));
+				s1=new String(req.getParameter("snake1"));
+				s2=new String(req.getParameter("snake2"));
 				gameboard g=new gameboard(game.getUserById(u1),game.getUserById(u2),row_count,col_count);
 				game.gameboards.add(g);
 				//gameboard.gameboard_count++;
 				g.u1.status=1;
 				g.u1.cur_gameboard_id=g.gameboard_id;
+				g.u1.snake.setObject(s1);
 				g.u2.status=1;
 				g.u2.cur_gameboard_id=g.gameboard_id;
-				g.init();
+				g.u2.snake.setObject(s2);
 			}
 			else if(accept==0)
 			{
@@ -63,17 +69,29 @@ public class getid extends HttpServlet
 			int gid=Integer.parseInt(req.getParameter("gid"));
 			int move=Integer.parseInt(req.getParameter("move"));
 			int uid=Integer.parseInt(req.getParameter("uid"));
-			for(user u:game.users)
+			
+			try
 			{
-				if(u.id==uid)
+				String object=new String(req.getParameter("object"));
+				for(user u:game.users)
 				{
-					int diff=(u.snake.getLast()-move);
-					if(diff!=2&&diff!=-2)
+					if(u.id==uid)
 					{
-						u.snake.move=move;
+						int diff=(u.snake.getLast()-move);
+						if(diff!=2&&diff!=-2)
+						{
+							u.snake.move=move;
+							u.snake.setObject(object);
+							u.snake.position_flag=1;
+						}
 					}
 				}
 			}
+			catch(Exception e)
+			{
+				
+			}
+
 		}
 		else if(t==4)
 		{

@@ -132,7 +132,7 @@
 						init_board();
 						if(gamestartflag!=temp)
 						{
-							start_snake_action();
+							//start_snake_action();
 							console.log("called start_snake_action");
 						}
 						listentogameboard();
@@ -154,6 +154,7 @@
 				  {
 					//id = this.responseText;
 					mysnake=snake1;
+					mysnake.id=id;
 					alert("challenge request sent!!!");
 				  }
 				};
@@ -172,42 +173,78 @@
 				  {
 					//id = this.responseText;
 					mysnake=snake2;
+					mysnake.id=id;
 					console.log("accepted!!!");
 				  }
 				};
-				xhttp.open("GET", "./getid?u1="+id+"&u2="+u2+"&t=2&accept="+accept+"&row_count="+row_count+"&col_count="+col_count, false);
+				snake1.uid=u2;
+				snake2.uid=id;
+				xhttp.open("GET", "./getid?u1="+u2+"&u2="+id+"&t=2&accept="+accept+"&row_count="+row_count+"&col_count="+col_count+"&snake1="+JSON.stringify(snake1)+"&snake2="+JSON.stringify(snake2), false);
 				xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 				xhttp.send();
 		}
-		
+		var pauseflag=1,startcount=0;
 		function listentogameboard()
 		{
-			var source = new EventSource('./GameBoardTeller?gid='+gameboard_id);
+			var source = new EventSource('./GameBoardTeller?gid='+gameboard_id+"&id="+id);
 			var blue=null,red=null;
 			source.addEventListener("boardstatus",function(event)
             {
 				var rows=document.getElementsByName("row");
 				
-				console.log("got game board status !!! "+event.data+" length "+event.data.length);
+				console.log("got game board status !!! "+event.data+" length "+event.data.length+" retry "+event);
 				let data=event.data.split("$");
-				snake1.direction=parseInt(data[0]);
-				snake2.direction=parseInt(data[1]);
+				//snake1.direction=parseInt(data[0]);
+				//snake2.direction=parseInt(data[1]);
 				console.log(data[2].length);
 				let x=parseInt(data[2].split(",")[0]);
 				let y=parseInt(data[2].split(",")[1]);
-				if(x!=-1&&y!=-1)
+				if(parseInt(data[7])==1)
 				{
-					let row=document.getElementsByName("row");
-					row[x].childNodes[y].style.backgroundColor=foodcolor;
+					let dummy=JSON.parse(data[0]);
+					if(dummy.uid!=mysnake.id)
+					{
+						clearsnake(snake1);
+						snake1=JSON.parse(data[0]);
+					}
 				}
-				let addflags=data[3].split(",");
-				if(addflags[0]==1)
+				if(parseInt(data[8])==1)
 				{
-					addBodyPart(1);
+					let dummy=JSON.parse(data[1]);
+					if(dummy.uid!=mysnake.id)
+					{
+						clearsnake(snake2);
+						snake2=JSON.parse(data[1]);
+					}
 				}
-				if(addflags[1]==1)
+				if(pauseflag!=0&&parseInt(data[6])==0)
 				{
-					addBodyPart(2);
+					//alert(pauseflag+" "+parseInt(data[6]));
+					start_snake_action();
+					pauseflag=0;
+				}
+				else if(parseInt(data[6])==1&&startcount==1)
+				{
+					console.log("going to call pause game");
+					pausegame();
+					pauseflag=parseInt(data[6]);
+				}
+				if(pauseflag==0)
+				{
+					if(x!=-1&&y!=-1)
+					{
+						let row=document.getElementsByName("row");
+						row[x].childNodes[y].style.backgroundColor=foodcolor;
+					}
+					let addflags=data[3].split(",");
+					if(addflags[0]==1)
+					{
+						addBodyPart(1);
+					}
+					if(addflags[1]==1)
+					{
+						addBodyPart(2);
+					}
 				}
             })			
 		}
@@ -221,7 +258,8 @@
 	var max_snake_len;
 	var snake1;
 	var snake2;
-	var mysnake;			
+	var mysnake;
+	var interval;	
 		function init_snake()
 		{
 			snake1= {
@@ -289,7 +327,7 @@
 			var row=document.getElementsByName("row")[0];
 			
 			var i;
-			for(i=0;i<45;i++)
+			for(i=0;i<30;i++)
 			{
 				let newrow=row.cloneNode(true);
 				table.appendChild(newrow);
@@ -306,7 +344,7 @@
 		function nextmove()
 		{
 			let i;
-			
+			console.log("nextmove called");
 			let rows=document.getElementsByName("row");
 			rows[snake1.body[snake1.body.length-1].x].childNodes[snake1.body[snake1.body.length-1].y].style.backgroundColor="transparent";
 			rows[snake2.body[snake2.body.length-1].x].childNodes[snake2.body[snake2.body.length-1].y].style.backgroundColor="transparent";
@@ -395,6 +433,7 @@
 		function redraw_snakes()
 		{
 			let i;
+			console.log("called redraw snake");
 			let rows=document.getElementsByName("row");
 			for(i=0;i<snake1.body.length;i++)
 			{
@@ -411,26 +450,30 @@
 		function start_snake_action()
 		{
 			//alert("gameboard id "+gameboard_id);
-			setInterval(nextmove,110);
+			//alert("my snake "+mysnake.color);
+			interval=setInterval(nextmove,120);
 		}
 		
 		document.onkeydown=function(e)
 			{
 				//alert(e.keyCode);
+				console.log("got input");
 				let move=e.keyCode
 				let diff=move-mysnake.direction;
 				if((move==37||move==38||move==39||move==40)&&(gamestartflag==1)&&(diff!=2&&diff!=2))
 				{
+					mysnake.direction=move;
 					var xhttp = new XMLHttpRequest();
 					xhttp.onreadystatechange = function() 
 					{
 					  if (this.readyState == 4 && this.status == 200) 
 					  {
-						mysnake.direction=move;
+						
 					  }
 					};
-					xhttp.open("GET", "./getid?uid="+id+"&move="+e.keyCode+"&gid="+gameboard_id+"&t=3", true);
-					xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+					mysnake.uid=id;
+					xhttp.open("GET", "./getid?uid="+id+"&move="+e.keyCode+"&gid="+gameboard_id+"&t=3"+"&object="+JSON.stringify(mysnake), true);
+					xhttp.setRequestHeader("Content-type", "application/json");
 					xhttp.send();
 				}
 			}
@@ -557,6 +600,21 @@
 				snake2.body.push(bodypart);
 				food_acquired();
 				
+			}
+		}
+		
+		function pausegame()
+		{
+			console.log("cleared interval!!!");
+			//clearInterval(interval);
+		}
+		
+		function clearsnake(snake)
+		{
+			let row=document.getElementsByName("row");
+			for(i=0;i<snake.body.length;i++)
+			{
+				row[snake.body[i].x].childNodes[snake.body[i].y].style.backgroundColor="transparent";
 			}
 		}
 	</script>

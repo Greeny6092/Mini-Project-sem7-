@@ -16,6 +16,7 @@ public class user extends HttpServlet
 		this.id=id;
 		points=0;
 		status=0;
+		//snake=new Snake();
 	}
 	
 	void addRequest(int id)
@@ -41,6 +42,7 @@ public class user extends HttpServlet
 		snake.addflag=0;
 		snake.position=0;
 		snake.removeflag=0;
+		snake.position_flag=0;
 	}
 	public void doGet(HttpServletRequest req,HttpServletResponse res)throws IOException,ServletException
 	{	

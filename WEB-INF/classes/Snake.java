@@ -3,11 +3,14 @@ import javax.servlet.http.*;
 import java.sql.*;
 import java.io.*;
 import java.util.*;
+import org.json.*;
 
 public class Snake extends HttpServlet
 {
 	String color=new String();
 	int move;
+	String object;
+	int position_flag=0;
 	int addflag=0,removeflag=0,position=0;
 	Queue<Integer> moveQueue=new LinkedList<Integer>();
 	ArrayList<BodyParts> bodyparts=new ArrayList<BodyParts>();
@@ -16,6 +19,11 @@ public class Snake extends HttpServlet
 		//this.uid=uid;
 		this.color=color;
 		move=initialdir;
+	}
+	
+	public void  setObject(String o)
+	{
+		object=new String(o);
 	}
 	
 	public void addNewBodyPart()
