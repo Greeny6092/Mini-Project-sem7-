@@ -7,7 +7,7 @@ import org.json.*;
 
 public class GameBoardTeller extends HttpServlet
 {
-	static long retry=10;
+	static long retry=100;
 	int randX=-1,randY=-1;
 	int s1move=39,s2move=37;
 	int row_count=0,col_count=0;

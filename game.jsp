@@ -48,7 +48,7 @@
 	</div>
 	<div>
 		<center>
-			<table name="table" border="1" style="background-color:black;" cellspacing="1"><tr name="row"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
+			<table name="table" border="0" style="background-color:black;" cellspacing="0"><tr name="row"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
 		</center>
 	</div>
 	<div id="requestbox">
@@ -327,7 +327,7 @@
 			var row=document.getElementsByName("row")[0];
 			
 			var i;
-			for(i=0;i<30;i++)
+			for(i=0;i<40;i++)
 			{
 				let newrow=row.cloneNode(true);
 				table.appendChild(newrow);
