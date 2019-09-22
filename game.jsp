@@ -327,7 +327,7 @@
 			var row=document.getElementsByName("row")[0];
 			
 			var i;
-			for(i=0;i<40;i++)
+			for(i=0;i<45;i++)
 			{
 				let newrow=row.cloneNode(true);
 				table.appendChild(newrow);
