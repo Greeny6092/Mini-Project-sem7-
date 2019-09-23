@@ -128,7 +128,7 @@ public class getid extends HttpServlet
 					}
 					else if(operation==2)
 					{
-						if(uno==1)
+						if(uno==g.u1.id)
 						{
 							g.u1.snake.removeflag=1;
 							g.u1.snake.position=position;

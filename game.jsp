@@ -48,7 +48,7 @@
 	</div>
 	<div>
 		<center>
-			<table name="table" border="0" style="background-color:black;" cellspacing="0"><tr name="row"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
+			<table name="table" border="1" style="background-color:black;" cellspacing="1"><tr name="row"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
 		</center>
 	</div>
 	<div id="requestbox">
@@ -245,6 +245,18 @@
 					{
 						addBodyPart(2);
 					}
+					let removeflag1=data[4].split(",");
+					let removeflag2=data[5].split(",");
+					if(parseInt(removeflag1[0])==1)
+					{
+						alert("removing u1");
+						removeBodyPart(1,parseInt(removeflag1[1]));
+					}
+					if(parseInt(removeflag2[0])==1)
+					{
+						alert("removing u1");
+						removeBodyPart(2,parseInt(removeflag2[1]));
+					}
 				}
             })			
 		}
@@ -343,7 +355,7 @@
 		
 		function nextmove()
 		{
-			let i;
+			let i,color;
 			console.log("nextmove called");
 			let rows=document.getElementsByName("row");
 			rows[snake1.body[snake1.body.length-1].x].childNodes[snake1.body[snake1.body.length-1].y].style.backgroundColor="transparent";
@@ -393,6 +405,36 @@
 			{
 				reportmysnakestatus(1,0,gameboard_id,1);
 			}
+			color=rows[snake1.body[0].x].childNodes[snake1.body[0].y].style.backgroundColor;
+			let x,y;
+			if(color==mysnake.color)
+			{
+				alert("reporting u1");
+				let position,i;
+				x=mysnake.body[0].x;
+				y=mysnake.body[0].y;
+				for(i=1;i<mysnake.body.length;i++)
+				{
+					if(mysnake.body[i].x==x&&mysnake.body[i].y==y)
+						break;
+				}
+				position=i+1;
+				reportmysnakestatus(2,position,gameboard_id,mysnake.uid);
+			}
+			else if(color==snake2.color)
+			{
+				alert("reporting u1 with other");
+				let position,i;
+				x=mysnake.body[0].x;
+				y=mysnake.body[0].y;
+				for(i=1;i<snake2.body.length;i++)
+				{
+					if(snake2.body[i].x==x&&snake2.body[i].y==y)
+						break;
+				}
+				position=i+1;
+				reportmysnakestatus(2,position,gameboard_id,snake2.uid);
+			}
 			switch(snake2.direction)
 			{
 				case 37:
@@ -426,6 +468,35 @@
 			if(rows[snake2.body[0].x].childNodes[snake2.body[0].y].style.backgroundColor==foodcolor)
 			{
 				reportmysnakestatus(1,0,gameboard_id,2);
+			}
+			color=rows[snake2.body[0].x].childNodes[snake2.body[0].y].style.backgroundColor;
+			if(color==mysnake.color)
+			{
+				alert("reporting u2");
+				let position,i;
+				x=mysnake.body[0].x;
+				y=mysnake.body[0].y;
+				for(i=1;i<mysnake.body.length;i++)
+				{
+					if(mysnake.body[i].x==x&&mysnake.body[i].y==y)
+						break;
+				}
+				position=i+1;
+				reportmysnakestatus(2,position,gameboard_id,mysnake.uid);
+			}
+			else if(color==snake1.color)
+			{
+				alert("reporting u2 with other");
+				let position,i;
+				x=mysnake.body[0].x;
+				y=mysnake.body[0].y;
+				for(i=1;i<snake1.body.length;i++)
+				{
+					if(snake1.body[i].x==x&&snake1.body[i].y==y)
+						break;
+				}
+				position=i+1;
+				reportmysnakestatus(2,position,gameboard_id,snake1.uid);
 			}
 			redraw_snakes();
 		}
@@ -601,6 +672,18 @@
 				food_acquired();
 				
 			}
+		}
+		
+		function removeBodyPart(uno,position) 
+		{
+				if(uno==1)
+				{
+					snake1.body.splice(position-1,snake1.length-position);
+				}
+				if(uno==2)
+				{
+					snake2.body.splice(position-1,snake2.length-position);
+				}
 		}
 		
 		function pausegame()
