@@ -10,6 +10,7 @@ public class user extends HttpServlet
 	String name=new String();
 	ArrayList<request> requests=new ArrayList<request>();
 	Snake snake;
+	
 	public user(int id,String name)
 	{
 		this.name=name;
@@ -44,6 +45,8 @@ public class user extends HttpServlet
 		snake.removeflag=0;
 		snake.position_flag=0;
 	}
+	
+	
 	public void doGet(HttpServletRequest req,HttpServletResponse res)throws IOException,ServletException
 	{	
 	

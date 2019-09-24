@@ -249,12 +249,12 @@
 					let removeflag2=data[5].split(",");
 					if(parseInt(removeflag1[0])==1)
 					{
-						alert("removing u1");
+						//alert("removing u1");
 						removeBodyPart(1,parseInt(removeflag1[1]));
 					}
 					if(parseInt(removeflag2[0])==1)
 					{
-						alert("removing u1");
+						//alert("removing u1");
 						removeBodyPart(2,parseInt(removeflag2[1]));
 					}
 				}
@@ -409,7 +409,7 @@
 			let x,y;
 			if(color==mysnake.color)
 			{
-				alert("reporting u1");
+				//alert("reporting u1");
 				let position,i;
 				x=mysnake.body[0].x;
 				y=mysnake.body[0].y;
@@ -423,7 +423,7 @@
 			}
 			else if(color==snake2.color)
 			{
-				alert("reporting u1 with other");
+				//alert("reporting u1 with other");
 				let position,i;
 				x=mysnake.body[0].x;
 				y=mysnake.body[0].y;
@@ -472,7 +472,7 @@
 			color=rows[snake2.body[0].x].childNodes[snake2.body[0].y].style.backgroundColor;
 			if(color==mysnake.color)
 			{
-				alert("reporting u2");
+				//alert("reporting u2");
 				let position,i;
 				x=mysnake.body[0].x;
 				y=mysnake.body[0].y;
@@ -486,7 +486,7 @@
 			}
 			else if(color==snake1.color)
 			{
-				alert("reporting u2 with other");
+				//alert("reporting u2 with other");
 				let position,i;
 				x=mysnake.body[0].x;
 				y=mysnake.body[0].y;

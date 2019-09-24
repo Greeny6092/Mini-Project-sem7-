@@ -51,6 +51,7 @@ public class gameboard extends HttpServlet
 		//cur_u2_move=4;
 		gameboard.gameboard_count++;
 	}
+	
 }
 
 
