@@ -65,11 +65,13 @@
 		var foodcolor="green";
 		function get_live_users()
 		{
-			var liveusers=document.getElementById("liveuserbox");
+			
 			var node;
+			var liveusers=document.getElementById("liveuserbox");
 			var source = new EventSource('./LiveUserLister'); 
 			 source.onmessage=function(event)
             {
+				
 				liveusers.innerHTML="";
 				let ids=event.data.split("$")[0].split(",");
 				let names=event.data.split("$")[1].split(",");
@@ -89,13 +91,17 @@
 						{
 							liveusers.style.display="none";
 						}
+						else
+						{
+							liveusers.style.display="inline-block";
+						}
 					}
 				}
 				
             };
 			get_request_details();
 		}
-		
+		//var esource;
 		function get_request_details()
 		{
 			var requestbox=document.getElementsByName("requestbox")[0];
@@ -115,6 +121,8 @@
 						newrow.innerHTML="<td>"+names[i]+"</td><td><button style='background-color:green;' onclick='accept("+requested[i]+",1)'>Accept</button></td><td><button style='background-color:red;' onclick='accept("+requested[i]+",0)'>Decline</button></td>";
 						requesttable.appendChild(newrow);
 					}
+					document.getElementById("requestbox").style.display="inline-block";
+					document.getElementsByName("table")[0].style.display="none";
 					//confirm("You got request from "+);
 			})
 			
@@ -123,7 +131,7 @@
 				console.log(event.data);
 				var temp=gamestartflag;
 					gamestartflag=event.data.split(",")[0];
-					if(gamestartflag==1)
+					if(gamestartflag==1&&temp!=gamestartflag)
 					{
 						document.getElementById("requestbox").style.display="none";
 						gameboard_id=event.data.split(",")[1];
@@ -134,11 +142,14 @@
 						{
 							//start_snake_action();
 							console.log("called start_snake_action");
+							
 						}
 						listentogameboard();
 						
 						source.removeEventListener("gamestartflag",startflag);
 					}
+					
+	
 					//console.log("game board id is "+gameboard_id+"gameflag is "+gamestartflag);
 					
             })
@@ -188,7 +199,7 @@
 		{
 			var source = new EventSource('./GameBoardTeller?gid='+gameboard_id+"&id="+id);
 			var blue=null,red=null;
-			source.addEventListener("boardstatus",function(event)
+			source.addEventListener("boardstatus",bstatus=function(event)
             {
 				var rows=document.getElementsByName("row");
 				
@@ -199,6 +210,37 @@
 				console.log(data[2].length);
 				let x=parseInt(data[2].split(",")[0]);
 				let y=parseInt(data[2].split(",")[1]);
+				if(parseInt(data[6])==2)
+				{
+					let d1=JSON.parse(data[0]);	
+					let d2=JSON.parse(data[1]);	
+					if(d1.winflag==1)
+					{
+						if(d1.uid==id)
+						{
+							alert("YOU WIN!!!!!");
+						}
+						else
+						{
+							alert("YOU LOSE");
+						}
+					}
+					else
+					{
+						if(d2.uid==id)
+						{
+							alert("YOU WIN!!!!!");
+						}
+						else
+						{
+							alert("YOU LOSE");
+						}
+					}
+					gamestartflag=0;
+					pausegame();
+					source.removeEventListener("boardstatus",bstatus);
+				}
+				
 				if(parseInt(data[7])==1)
 				{
 					let dummy=JSON.parse(data[0]);
@@ -241,7 +283,7 @@
 					let addflags=data[3].split(",");
 					if(addflags[0]==1)
 					{
-						let dummy=JSon.parse(data[0]);
+						let dummy=JSON.parse(data[0]);
 						if(dummy.uid!=id)
 						{
 							addBodyPart(1);
@@ -250,7 +292,7 @@
 					}
 					if(addflags[1]==1)
 					{
-						let dummy=JSon.parse(data[1]);
+						let dummy=JSON.parse(data[1]);
 						if(dummy.uid!=id)
 						{
 							addBodyPart(2);
@@ -262,12 +304,24 @@
 					if(parseInt(removeflag1[0])==1)
 					{
 						//alert("removing u1");
-						removeBodyPart(1,parseInt(removeflag1[1]));
+						let dummy=JSON.parse(data[0]);
+						if(id==dummy.uid)
+						{
+							alert("remove flag set for uno=1");
+							removeBodyPart(1,parseInt(removeflag1[1]));
+							acksignal(id,gameboard_id);
+						}
 					}
 					if(parseInt(removeflag2[0])==1)
 					{
 						//alert("removing u1");
-						removeBodyPart(2,parseInt(removeflag2[1]));
+						let dummy=JSON.parse(data[1]);
+						if(id==dummy.uid)
+						{	
+							alert("remove flag set for uno=2");					
+							removeBodyPart(2,parseInt(removeflag2[1]));
+							acksignal(id,gameboard_id);
+						}
 					}
 				}
             })			
@@ -291,14 +345,16 @@
 						body:[{x:0,y:0}],
 						//body:new array(),
 						color:"red",
-						direction:39
+						direction:39,
+						winflag:0
 					};
 			snake2= {
 						uid:"",
 						//body:bodyparts[max_snake_len],
 						body:[{x:0,y:0}],
 						color:"blue",
-						direction:37
+						direction:37,
+						winflag:0
 					};		
 			let i;
 			let x=parseInt(row_count/2),y=2;
@@ -367,6 +423,15 @@
 		
 		function nextmove()
 		{
+			if(snake1.body.length<3)
+			{
+				gameoversignal(snake1.uid);
+			}
+			if(snake2.body.length<3)
+			{
+				gameoversignal(snake2.uid);
+			}
+			
 			let i,color;
 			console.log("nextmove called");
 			let rows=document.getElementsByName("row");
@@ -431,7 +496,7 @@
 						break;
 				}
 				position=i+1;
-				reportmysnakestatus(2,position,gameboard_id,mysnake.uid);
+				reportmysnakestatus(2,position,gameboard_id,1);
 			}
 			else if(color==snake2.color)
 			{
@@ -445,7 +510,7 @@
 						break;
 				}
 				position=i+1;
-				reportmysnakestatus(2,position,gameboard_id,snake2.uid);
+				reportmysnakestatus(2,position,gameboard_id,2);
 			}
 			switch(snake2.direction)
 			{
@@ -494,7 +559,7 @@
 						break;
 				}
 				position=i+1;
-				reportmysnakestatus(2,position,gameboard_id,mysnake.uid);
+				reportmysnakestatus(2,position,gameboard_id,2);
 			}
 			else if(color==snake1.color)
 			{
@@ -508,7 +573,7 @@
 						break;
 				}
 				position=i+1;
-				reportmysnakestatus(2,position,gameboard_id,snake1.uid);
+				reportmysnakestatus(2,position,gameboard_id,1);
 			}
 			redraw_snakes();
 		}
@@ -578,7 +643,14 @@
 		
 		function reportmysnakestatus(operation,position,gid,uno)
 		{
-			addBodyPart(uno);
+			if(operation==1)
+			{
+				addBodyPart(uno);
+			}
+			else if(operation==2)
+			{
+				removeBodyPart(uno,position);
+			}
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() 
 			{
@@ -587,7 +659,7 @@
 				//mysnake.direction=move;
 			  }
 			};
-			xhttp.open("GET", "./getid?uid="+id+"&gid="+gameboard_id+"&operation="+operation+"&position="+position+"&gid="+gid+"&uno="+uno+"&t=5", true);
+			xhttp.open("GET", "./getid?uid="+id+"&operation="+operation+"&position="+position+"&gid="+gid+"&uno="+uno+"&t=5", true);
 			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			xhttp.send();
 		}
@@ -689,14 +761,26 @@
 		
 		function removeBodyPart(uno,position) 
 		{
+			let row=document.getElementsByName("row"),i;
 				if(uno==1)
 				{
-					snake1.body.splice(position-1,snake1.length-position);
+					for(i=position-1;i<(snake1.body.length);i++)
+					{
+						row[snake1.body[i].x].childNodes[snake1.body[i].y].style.backgroundColor="transparent";
+					}
+					snake1.body.splice(position-1,snake1.body.length-(position-1));
+					//alert("removed bodypart of snake"+uno);
 				}
 				if(uno==2)
 				{
-					snake2.body.splice(position-1,snake2.length-position);
+					for(i=position-1;i<(snake2.body.length);i++)
+					{
+						row[snake2.body[i].x].childNodes[snake2.body[i].y].style.backgroundColor="transparent";
+					}
+					snake2.body.splice(position-1,snake2.body.length-(position-1));
+					//alert("removed bodypart of snake"+uno);
 				}
+				
 		}
 		
 		function pausegame()
@@ -725,6 +809,29 @@
 			  }
 			};
 			xhttp.open("GET", "./getid?uid="+uid+"&gid="+gid+"&t=7", true);
+			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhttp.send();			
+		}
+		
+		function gameoversignal(uid)
+		{
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() 
+			{
+			  if (this.readyState == 4 && this.status == 200) 
+			  {
+				//mysnake.direction=move;
+			  }
+			};
+			if(uid==snake1.uid)
+			{
+				snake2.winflag=1;
+			}
+			if(uid==snake2.uid)
+			{
+				snake1.winflag=1;
+			}
+			xhttp.open("GET", "./getid?uid="+uid+"&gid="+gameboard_id+"&t=8"+"&s1="+JSON.stringify(snake1)+"&s2="+JSON.stringify(snake2), true);
 			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			xhttp.send();			
 		}

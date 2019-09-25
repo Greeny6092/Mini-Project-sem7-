@@ -58,6 +58,7 @@ public class getid extends HttpServlet
 				g.u2.status=1;
 				g.u2.cur_gameboard_id=g.gameboard_id;
 				g.u2.snake.setObject(s2);
+				game.getUserById(u1).removeRequest(game.getUserById(u2));
 			}
 			else if(accept==0)
 			{
@@ -123,19 +124,19 @@ public class getid extends HttpServlet
 						{
 							g.u1.snake.addflag=1;
 						}
-						else
+						else if(uno==2)
 						{
 							g.u2.snake.addflag=1;
 						}
 					}
 					else if(operation==2)
 					{
-						if(uno==g.u1.id)
+						if(uno==1)
 						{
 							g.u1.snake.removeflag=1;
 							g.u1.snake.position=position;
 						}
-						else
+						else if(uno==2)
 						{
 							g.u2.snake.removeflag=1;
 							g.u2.snake.position=position;							
@@ -186,6 +187,24 @@ public class getid extends HttpServlet
 					}
 				}
 			}
+		}
+		else if(t==8)
+		{
+			String s1,s2;
+			int gid=Integer.parseInt(req.getParameter("gid"));
+			s1=new String(req.getParameter("s1"));
+			s2=new String(req.getParameter("s2"));
+			for(gameboard g:game.gameboards)
+			{
+				if(g.gameboard_id==gid)
+				{
+					g.pauseflag=2;
+					g.u1.snake.setObject(s1);
+					g.u2.snake.setObject(s1);
+					g.u1.status=0;
+					g.u2.status=0;
+				}
+			}				
 		}
 	}
 }
