@@ -154,15 +154,16 @@ public class getid extends HttpServlet
 				JSONObject o1=new JSONObject(s1);
 				JSONObject o2=new JSONObject(s2);
 				Class.forName("com.mysql.jdbc.Driver");  
-				Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/sonoo","root","root");  
+				Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/snakegame?useSSL=false","root","");  
 				Statement stmt=con.createStatement(); 
 				int id1=o1.getInt("uid");
 				int d1=o1.getInt("direction");
-				//int l1=o1.getJsonArray("body");
+				int l1=o1.getJSONArray("body").length();
 				int id2=o2.getInt("uid");
 				int d2=o2.getInt("direction");
-				//int l2=o2.getJsonArray("body");
-				//stmt.execute("insert into moves values("+id1+","+d1+","+l1+","+id2+","+d2+","+l2+");");
+				int l2=o2.getJSONArray("body").length();
+				stmt.execute("insert into moves values("+id1+","+d1+","+l1+","+id2+","+d2+","+l2+");");
+				con.close();
 			}
 			catch(Exception e)
 			{

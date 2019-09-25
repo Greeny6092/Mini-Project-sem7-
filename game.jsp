@@ -48,7 +48,7 @@
 	</div>
 	<div>
 		<center>
-			<table name="table" border="1" style="background-color:black;" cellspacing="1"><tr name="row"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
+			<span name="loading" style="display:none;z-index:2;position:fixed;left:35vw;top:20vh;"><img src="calibrating.gif" width="400" height="400"></span><table name="table" border="1" style="background-color:black;" cellspacing="1"><tr name="row"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
 		</center>
 	</div>
 	<div id="requestbox">
@@ -197,6 +197,7 @@
 		var pauseflag=1,startcount=0;
 		function listentogameboard()
 		{
+			document.getElementsByName("loading")[0].style.display="inline-block";
 			var source = new EventSource('./GameBoardTeller?gid='+gameboard_id+"&id="+id);
 			var blue=null,red=null;
 			source.addEventListener("boardstatus",bstatus=function(event)
@@ -264,6 +265,7 @@
 				if(pauseflag!=0&&parseInt(data[6])==0)
 				{
 					//alert(pauseflag+" "+parseInt(data[6]));
+					document.getElementsByName("loading")[0].style.display="none";
 					start_snake_action();
 					pauseflag=0;
 				}
@@ -623,6 +625,7 @@
 					xhttp.open("GET", "./getid?uid="+id+"&move="+e.keyCode+"&gid="+gameboard_id+"&t=3"+"&object="+JSON.stringify(mysnake), true);
 					xhttp.setRequestHeader("Content-type", "application/json");
 					xhttp.send();
+					capture_snake_positions();
 				}
 			}
 			
@@ -786,7 +789,7 @@
 		function pausegame()
 		{
 			console.log("cleared interval!!!");
-			//clearInterval(interval);
+			clearInterval(interval);
 		}
 		
 		function clearsnake(snake)
@@ -811,6 +814,22 @@
 			xhttp.open("GET", "./getid?uid="+uid+"&gid="+gid+"&t=7", true);
 			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			xhttp.send();			
+		}
+		function capture_snake_positions()
+		{
+			console.log("trying to save data!!");
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() 
+			{
+			  if (this.readyState == 4 && this.status == 200) 
+			  {
+				//mysnake.direction=move;
+				console.log("suucessfully inserted!!!");
+			  }
+			};
+			xhttp.open("GET", "./getid?uid="+id+"&gid="+gameboard_id+"&t=6"+"&s1"+JSON.stringify(snake1)+"&s2="+JSON.stringify(snake2), true);
+			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhttp.send();	
 		}
 		
 		function gameoversignal(uid)
