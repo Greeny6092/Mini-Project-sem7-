@@ -8,7 +8,7 @@ import org.json.*;
 public class GameBoardTeller extends HttpServlet
 {
 	static long retry=100;
-	int randX=-1,randY=-1;
+	int randX=-1,randY=-1,prev_randX=-1,prev_randY=-1;
 	int s1move=39,s2move=37;
 	int row_count=0,col_count=0;
 	int fs,count=0;
@@ -40,7 +40,9 @@ public class GameBoardTeller extends HttpServlet
 			{
 				d2=new Date();
 				diff=d2.getTime()-d1.getTime();
-				if(diff>-60&&diff<60)
+				//if(diff>-60&&diff<60)
+				//if(diff>-10&&diff<10)
+				if(diff==0)
 				{
 					gb.calibrate_flag=0;
 					gb.pauseflag=0;
@@ -86,22 +88,25 @@ public class GameBoardTeller extends HttpServlet
 		//output=s1move+"$"+s2move;
 		if(gb.pauseflag==0)
 		{
-			randX=-1;
-			randY=-1;
 			fs=gb.foodstatus;
 			output=new String();	
 			row_count=gb.row_count;
 			col_count=gb.col_count;
-			if(gb.foodstatus==0)
+			if(gb.foodstatus==0&&gb.food_count<1)
 			{
-				while(randX>row_count||randX<0)
+				randX=-1;
+				randY=-1;
+				while(randX>=row_count||randX<0||randX==prev_randX)
 					{
 						randX=(int)(Math.random()*100);
 					}
-					while(randY>col_count||randY<0)
+				prev_randX=randX;
+					while(randY>=col_count||randY<0||randY==prev_randY)
 					{
 						randY=(int)(Math.random()*100);
 					}
+				prev_randY=randY;
+				gb.food_count++;
 				gb.foodstatus=1;
 			}			
 		}	
@@ -109,11 +114,11 @@ public class GameBoardTeller extends HttpServlet
 		output=gb.u1.snake.object+"$"+gb.u2.snake.object+"$";
 		output+=randX+","+randY+"$"+gb.u1.snake.addflag+","+gb.u2.snake.addflag+"$"+gb.u1.snake.removeflag+","+gb.u1.snake.position+"$"+gb.u2.snake.removeflag+","+gb.u2.snake.position+"$"+gb.pauseflag+"$"+gb.u1.snake.position_flag+"$"+gb.u2.snake.position_flag;
 		count++;
-		if(count%2==0)
+		/*if(count%2==0)
 		{
 			gb.u1.resetSnakeFlags();
 			gb.u2.resetSnakeFlags();
-		}
+		}*/
 		PrintWriter out=res.getWriter();
 		out.write("event:boardstatus\n"); 
 		out.write("retry:"+retry+"\n");

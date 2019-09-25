@@ -13,7 +13,7 @@ public class gameboard extends HttpServlet
 	int row_count,col_count;
 	static int gameboard_count=0;
 	int matrix[][]=new int[10][12];
-	int foodstatus=0;
+	int foodstatus=0,food_count=0;
 	int pauseflag=1;
 	int calibrate_flag=1;
 	public void nextMove()

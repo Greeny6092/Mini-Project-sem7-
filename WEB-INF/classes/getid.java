@@ -102,6 +102,7 @@ public class getid extends HttpServlet
 				if(gid==g.gameboard_id)
 				{
 					g.foodstatus=0;
+					g.food_count--;
 				}
 			}
 		}
@@ -145,20 +146,46 @@ public class getid extends HttpServlet
 		}
 		else if(t==6)
 		{
-			String s1=new String(req.getParameter("s1"));
-			String s2=new String(req.getParameter("s2"));
-			JSONObject o1=new JSONObject(s1);
-			JSONObject o2=new JSONObject(s2);
-			Class.forName("com.mysql.jdbc.Driver");  
-			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/sonoo","root","root");  
-			Statement stmt=con.createStatement(); 
-			int id1=o1.getInt("uid");
-			int d1=o1.getInt("direction");
-			int l1=o1.getJsonArray("body");
-			int id2=o2.getInt("uid");
-			int d2=o2.getInt("direction");
-			int l2=o2.getJsonArray("body");
-			stmt.execute("insert into moves values("+id1+","+d1+","+l1+","+id2+","+d2+","+l2+");");
+			try
+			{
+				String s1=new String(req.getParameter("s1"));
+				String s2=new String(req.getParameter("s2"));
+				JSONObject o1=new JSONObject(s1);
+				JSONObject o2=new JSONObject(s2);
+				Class.forName("com.mysql.jdbc.Driver");  
+				Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/sonoo","root","root");  
+				Statement stmt=con.createStatement(); 
+				int id1=o1.getInt("uid");
+				int d1=o1.getInt("direction");
+				//int l1=o1.getJsonArray("body");
+				int id2=o2.getInt("uid");
+				int d2=o2.getInt("direction");
+				//int l2=o2.getJsonArray("body");
+				//stmt.execute("insert into moves values("+id1+","+d1+","+l1+","+id2+","+d2+","+l2+");");
+			}
+			catch(Exception e)
+			{
+				
+			}
+		}
+		else if(t==7)
+		{
+			int uid=Integer.parseInt(req.getParameter("uid"));
+			int gid=Integer.parseInt(req.getParameter("gid"));
+			for(gameboard g:game.gameboards)
+			{
+				if(g.gameboard_id==gid)
+				{
+					if(g.u1.id==uid)
+					{
+						g.u1.resetSnakeFlags();
+					}
+					else
+					{
+						g.u2.resetSnakeFlags();
+					}
+				}
+			}
 		}
 	}
 }

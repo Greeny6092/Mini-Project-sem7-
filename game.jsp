@@ -206,6 +206,7 @@
 					{
 						clearsnake(snake1);
 						snake1=JSON.parse(data[0]);
+						acksignal(snake1.uid,gameboard_id);
 					}
 				}
 				if(parseInt(data[8])==1)
@@ -215,6 +216,7 @@
 					{
 						clearsnake(snake2);
 						snake2=JSON.parse(data[1]);
+						acksignal(snake2.uid,gameboard_id);
 					}
 				}
 				if(pauseflag!=0&&parseInt(data[6])==0)
@@ -239,11 +241,21 @@
 					let addflags=data[3].split(",");
 					if(addflags[0]==1)
 					{
-						addBodyPart(1);
+						let dummy=JSon.parse(data[0]);
+						if(dummy.uid!=id)
+						{
+							addBodyPart(1);
+							acksignal(snake1.uid,gameboard_id);
+						}
 					}
 					if(addflags[1]==1)
 					{
-						addBodyPart(2);
+						let dummy=JSon.parse(data[1]);
+						if(dummy.uid!=id)
+						{
+							addBodyPart(2);
+							acksignal(snake2.uid,gameboard_id);
+						}
 					}
 					let removeflag1=data[4].split(",");
 					let removeflag2=data[5].split(",");
@@ -566,6 +578,7 @@
 		
 		function reportmysnakestatus(operation,position,gid,uno)
 		{
+			addBodyPart(uno);
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() 
 			{
@@ -699,6 +712,21 @@
 			{
 				row[snake.body[i].x].childNodes[snake.body[i].y].style.backgroundColor="transparent";
 			}
+		}
+		
+		function acksignal(uid,gid)
+		{
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() 
+			{
+			  if (this.readyState == 4 && this.status == 200) 
+			  {
+				//mysnake.direction=move;
+			  }
+			};
+			xhttp.open("GET", "./getid?uid="+uid+"&gid="+gid+"&t=7", true);
+			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhttp.send();			
 		}
 	</script>
 </body>
