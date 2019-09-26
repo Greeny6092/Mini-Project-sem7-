@@ -149,25 +149,35 @@ public class getid extends HttpServlet
 		{
 			try
 			{
+				out.println("enterd\n");
 				String s1=new String(req.getParameter("s1"));
+				out.println("got s1");
 				String s2=new String(req.getParameter("s2"));
+				out.println("got s2");
+				out.println("got parameters\ns1 "+s1+"\ns2 "+s2);
 				JSONObject o1=new JSONObject(s1);
+				out.println("converted s1");
 				JSONObject o2=new JSONObject(s2);
+				out.println("converted to JSON object!!");
 				Class.forName("com.mysql.jdbc.Driver");  
 				Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/snakegame?useSSL=false","root","");  
 				Statement stmt=con.createStatement(); 
 				int id1=o1.getInt("uid");
+				out.println("extracted uid");
 				int d1=o1.getInt("direction");
+				out.println("extracted direction");
 				int l1=o1.getJSONArray("body").length();
+				out.println("extracted array");
 				int id2=o2.getInt("uid");
 				int d2=o2.getInt("direction");
 				int l2=o2.getJSONArray("body").length();
 				stmt.execute("insert into moves values("+id1+","+d1+","+l1+","+id2+","+d2+","+l2+");");
+				out.println("inserted");
 				con.close();
 			}
 			catch(Exception e)
 			{
-				
+				out.println("Error "+e);
 			}
 		}
 		else if(t==7)

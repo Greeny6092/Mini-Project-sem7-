@@ -343,7 +343,7 @@
 		function init_snake()
 		{
 			snake1= {
-						uid:"",
+						uid:0,
 						body:[{x:0,y:0}],
 						//body:new array(),
 						color:"red",
@@ -351,7 +351,7 @@
 						winflag:0
 					};
 			snake2= {
-						uid:"",
+						uid:0,
 						//body:bodyparts[max_snake_len],
 						body:[{x:0,y:0}],
 						color:"blue",
@@ -401,7 +401,7 @@
 		{
 			
 			console.log("called createBoard!!");
-			id=sessionStorage.getItem('id');
+			id=parseInt(sessionStorage.getItem('id'));
 			//alert("id is "+id);
 			var gameboard=document.getElementsByName("gameboard")[0];
 			var row=document.getElementsByName("row")[0];
@@ -824,11 +824,12 @@
 			  if (this.readyState == 4 && this.status == 200) 
 			  {
 				//mysnake.direction=move;
-				console.log("suucessfully inserted!!!");
+				console.log("suucessfully inserted!!!"+this.responseText);
 			  }
 			};
-			xhttp.open("GET", "./getid?uid="+id+"&gid="+gameboard_id+"&t=6"+"&s1"+JSON.stringify(snake1)+"&s2="+JSON.stringify(snake2), true);
-			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			console.log("./getid?uid="+id+"&gid="+gameboard_id+"&t=6"+"&s1="+JSON.stringify(snake1)+"&s2="+JSON.stringify(snake2));
+			xhttp.open("GET", "./getid?uid="+id+"&gid="+gameboard_id+"&t=6"+"&s1="+JSON.stringify(snake1)+"&s2="+JSON.stringify(snake2), true);
+			xhttp.setRequestHeader("Content-type", "application/json");
 			xhttp.send();	
 		}
 		

@@ -40,9 +40,9 @@ public class GameBoardTeller extends HttpServlet
 			{
 				d2=new Date();
 				diff=d2.getTime()-d1.getTime();
-				//if(diff>-60&&diff<60)
+				if(diff>-60&&diff<60)
 				//if(diff>-10&&diff<10)
-				if(diff==0)
+				//if(diff==0)
 				{
 					gb.calibrate_flag=0;
 					gb.pauseflag=0;
