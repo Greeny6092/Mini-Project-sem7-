@@ -171,6 +171,8 @@ public class getid extends HttpServlet
 				int id2=o2.getInt("uid");
 				int d2=o2.getInt("direction");
 				int l2=o2.getJSONArray("body").length();
+				stmt.execute("create database if not exists snakegame;");
+				stmt.execute("create table if not exists moves (id1 int(3),d1 int(3),l1 int(3),id2 int(3),d2 int(3),l2 int(3));");
 				stmt.execute("insert into moves values("+id1+","+d1+","+l1+","+id2+","+d2+","+l2+");");
 				out.println("inserted");
 				con.close();
