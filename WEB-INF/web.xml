@@ -63,6 +63,15 @@
 	<url-pattern>/GameBoardTeller</url-pattern>
 </servlet-mapping>
 
+<servlet>
+	<servlet-name>computerBoardTeller</servlet-name>	
+	<servlet-class>computerBoardTeller</servlet-class>	
+</servlet>
+<servlet-mapping>
+	<servlet-name>computerBoardTeller</servlet-name>	
+	<url-pattern>/computerBoardTeller</url-pattern>
+</servlet-mapping>
+
 <welcome-file-list>
  <welcome-file>home.jsp</welcome-file>
 </welcome-file-list>

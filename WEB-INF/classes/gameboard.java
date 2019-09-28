@@ -8,6 +8,7 @@ public class gameboard extends HttpServlet
 {
 	user u1;
 	user u2;
+	Computer c;
 	int status,cur_u1_move,cur_u2_move;
 	int gameboard_id;
 	int row_count,col_count;
@@ -49,6 +50,19 @@ public class gameboard extends HttpServlet
 		//cur_u1_move=1;
 		//u2move.add(4);
 		//cur_u2_move=4;
+		gameboard.gameboard_count++;
+	}
+	
+	public gameboard(user u1,Computer c,int row_count,int col_count)
+	{
+		this.u1=u1;
+		this.c=c;
+		this.row_count=row_count;
+		this.col_count=col_count;
+		this.u1.snake=new Snake("red",39);
+		this.c.snake=new Snake("blue",37);
+		status=1;		
+		gameboard_id=gameboard.gameboard_count;
 		gameboard.gameboard_count++;
 	}
 	

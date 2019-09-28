@@ -23,6 +23,16 @@
 		border:transparent;
 	}
 	
+	button.playwithcom
+	{
+		background-color:rgba(250,150,50,0.8);
+		border-color:transparent;
+	}
+	button.playwithcom:hover
+	{
+		
+	}
+	
 </style>
 </head>
 <body onload="createBoard()">
@@ -44,7 +54,7 @@
 	</tr>
 	</table>
 	</div>-->
-	<div id="liveuserbox">
+	<div id="liveuserbox">	
 	</div>
 	<div>
 		<center>
@@ -63,6 +73,7 @@
 		var gamestartflag=0;
 		var gameboard_id;
 		var foodcolor="green";
+		var withcomputer=0;
 		function get_live_users()
 		{
 			
@@ -72,7 +83,7 @@
 			 source.onmessage=function(event)
             {
 				
-				liveusers.innerHTML="";
+				liveusers.innerHTML="<button class='playwithcom' style='border-radius:0.7vw;width:18vw;height:5vh;;font-size:17pt;' onclick='challenge(-1)'><b>Play with a Computer...</b></button>";
 				let ids=event.data.split("$")[0].split(",");
 				let names=event.data.split("$")[1].split(",");
 				for(i=1;i<ids.length;i++)
@@ -131,7 +142,7 @@
 				console.log(event.data);
 				var temp=gamestartflag;
 					gamestartflag=event.data.split(",")[0];
-					if(gamestartflag==1&&temp!=gamestartflag)
+					if(gamestartflag==1&&temp!=gamestartflag&&withcomputer==0)
 					{
 						document.getElementById("requestbox").style.display="none";
 						gameboard_id=event.data.split(",")[1];
@@ -148,8 +159,15 @@
 						
 						source.removeEventListener("gamestartflag",startflag);
 					}
-					
-	
+					else if(gamestartflag==1&&temp!=gamestartflag&&withcomputer==1)
+					{
+						document.getElementById("requestbox").style.display="none";
+						gameboard_id=event.data.split(",")[1];
+						document.getElementsByName("table")[0].style.display="inline-block";
+						init_board();
+						listentogameboard();
+						source.removeEventListener("gamestartflag",startflag);
+					}
 					//console.log("game board id is "+gameboard_id+"gameflag is "+gamestartflag);
 					
             })
@@ -164,9 +182,21 @@
 				  if (this.readyState == 4 && this.status == 200) 
 				  {
 					//id = this.responseText;
-					mysnake=snake1;
-					mysnake.id=id;
-					alert("challenge request sent!!!");
+					let resp="";
+					resp=parseInt(this.responseText);
+					alert(this.responseText.length+" "+this.responseText+" resp="+resp);
+					if(resp==-1)
+					{
+						withcomputer=1;
+						accept(-1,1);
+					}
+					//else
+					//{
+						mysnake=snake1;
+						mysnake.id=id;
+						oppsnake=snake2;
+						alert("challenge request sent!!!");
+					//}
 				  }
 				};
 				xhttp.open("GET", "./getid?id1="+id+"&id2="+id2+"&t=1", false);
@@ -183,14 +213,27 @@
 				  if (this.readyState == 4 && this.status == 200) 
 				  {
 					//id = this.responseText;
-					mysnake=snake2;
-					mysnake.id=id;
-					console.log("accepted!!!");
+					if(withcomputer==0)
+					{
+						mysnake=snake2;
+						mysnake.id=id;
+						console.log("accepted!!!");
+					}
 				  }
 				};
-				snake1.uid=u2;
-				snake2.uid=id;
-				xhttp.open("GET", "./getid?u1="+u2+"&u2="+id+"&t=2&accept="+accept+"&row_count="+row_count+"&col_count="+col_count+"&snake1="+JSON.stringify(snake1)+"&snake2="+JSON.stringify(snake2), false);
+				if(u2!=-1)
+				{
+					snake1.uid=u2;
+					snake2.uid=id;
+					xhttp.open("GET", "./getid?u1="+u2+"&u2="+id+"&t=2&accept="+accept+"&row_count="+row_count+"&col_count="+col_count+"&snake1="+JSON.stringify(snake1)+"&snake2="+JSON.stringify(snake2), false);
+				}
+				else
+				{
+					snake1.uid=id;
+					snake2.uid=u2;					
+					xhttp.open("GET", "./getid?u1="+id+"&u2=-1&t=2&accept="+accept+"&row_count="+row_count+"&col_count="+col_count+"&snake1="+JSON.stringify(snake1)+"&snake2="+JSON.stringify(snake2), false);					
+				}
+
 				xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 				xhttp.send();
 		}
@@ -198,135 +241,149 @@
 		function listentogameboard()
 		{
 			document.getElementsByName("loading")[0].style.display="inline-block";
-			var source = new EventSource('./GameBoardTeller?gid='+gameboard_id+"&id="+id);
-			var blue=null,red=null;
-			source.addEventListener("boardstatus",bstatus=function(event)
-            {
-				var rows=document.getElementsByName("row");
-				
-				console.log("got game board status !!! "+event.data+" length "+event.data.length+" retry "+event);
-				let data=event.data.split("$");
-				//snake1.direction=parseInt(data[0]);
-				//snake2.direction=parseInt(data[1]);
-				console.log(data[2].length);
-				let x=parseInt(data[2].split(",")[0]);
-				let y=parseInt(data[2].split(",")[1]);
-				if(parseInt(data[6])==2)
+			var source;
+			if(withcomputer==0)
+			{
+				source = new EventSource('./GameBoardTeller?gid='+gameboard_id+"&id="+id);
+				var blue=null,red=null;
+				source.addEventListener("boardstatus",bstatus=function(event)
 				{
-					let d1=JSON.parse(data[0]);	
-					let d2=JSON.parse(data[1]);	
-					if(d1.winflag==1)
+					var rows=document.getElementsByName("row");
+					console.log("got game board status !!! "+event.data+" length "+event.data.length+" retry "+event);
+					let data=event.data.split("$");
+					//snake1.direction=parseInt(data[0]);
+					//snake2.direction=parseInt(data[1]);
+					console.log(data[2].length);
+					let x=parseInt(data[2].split(",")[0]);
+					let y=parseInt(data[2].split(",")[1]);
+					if(parseInt(data[6])==2)
 					{
-						if(d1.uid==id)
+						let d1=JSON.parse(data[0]);	
+						let d2=JSON.parse(data[1]);	
+						if(d1.winflag==1)
 						{
-							alert("YOU WIN!!!!!");
+							if(d1.uid==id)
+							{
+								alert("YOU WIN!!!!!");
+							}
+							else
+							{
+								alert("YOU LOSE");
+							}
 						}
 						else
 						{
-							alert("YOU LOSE");
+							if(d2.uid==id)
+							{
+								alert("YOU WIN!!!!!");
+							}
+							else
+							{
+								alert("YOU LOSE");
+							}
 						}
+						gamestartflag=0;
+						pausegame();
+						source.removeEventListener("boardstatus",bstatus);
 					}
-					else
-					{
-						if(d2.uid==id)
-						{
-							alert("YOU WIN!!!!!");
-						}
-						else
-						{
-							alert("YOU LOSE");
-						}
-					}
-					gamestartflag=0;
-					pausegame();
-					source.removeEventListener("boardstatus",bstatus);
-				}
-				
-				if(parseInt(data[7])==1)
-				{
-					let dummy=JSON.parse(data[0]);
-					if(dummy.uid!=mysnake.id)
-					{
-						clearsnake(snake1);
-						snake1=JSON.parse(data[0]);
-						acksignal(snake1.uid,gameboard_id);
-					}
-				}
-				if(parseInt(data[8])==1)
-				{
-					let dummy=JSON.parse(data[1]);
-					if(dummy.uid!=mysnake.id)
-					{
-						clearsnake(snake2);
-						snake2=JSON.parse(data[1]);
-						acksignal(snake2.uid,gameboard_id);
-					}
-				}
-				if(pauseflag!=0&&parseInt(data[6])==0)
-				{
-					//alert(pauseflag+" "+parseInt(data[6]));
-					document.getElementsByName("loading")[0].style.display="none";
-					start_snake_action();
-					pauseflag=0;
-				}
-				else if(parseInt(data[6])==1&&startcount==1)
-				{
-					console.log("going to call pause game");
-					pausegame();
-					pauseflag=parseInt(data[6]);
-				}
-				if(pauseflag==0)
-				{
-					if(x!=-1&&y!=-1)
-					{
-						let row=document.getElementsByName("row");
-						row[x].childNodes[y].style.backgroundColor=foodcolor;
-					}
-					let addflags=data[3].split(",");
-					if(addflags[0]==1)
+					
+					if(parseInt(data[7])==1)
 					{
 						let dummy=JSON.parse(data[0]);
-						if(dummy.uid!=id)
+						if(dummy.uid!=mysnake.id)
 						{
-							addBodyPart(1);
+							clearsnake(snake1);
+							snake1=JSON.parse(data[0]);
 							acksignal(snake1.uid,gameboard_id);
 						}
 					}
-					if(addflags[1]==1)
+					if(parseInt(data[8])==1)
 					{
 						let dummy=JSON.parse(data[1]);
-						if(dummy.uid!=id)
+						if(dummy.uid!=mysnake.id)
 						{
-							addBodyPart(2);
+							clearsnake(snake2);
+							snake2=JSON.parse(data[1]);
 							acksignal(snake2.uid,gameboard_id);
 						}
 					}
-					let removeflag1=data[4].split(",");
-					let removeflag2=data[5].split(",");
-					if(parseInt(removeflag1[0])==1)
+					if(pauseflag!=0&&parseInt(data[6])==0)
 					{
-						//alert("removing u1");
-						let dummy=JSON.parse(data[0]);
-						if(id==dummy.uid)
+						//alert(pauseflag+" "+parseInt(data[6]));
+						document.getElementsByName("loading")[0].style.display="none";
+						start_snake_action();
+						pauseflag=0;
+					}
+					else if(parseInt(data[6])==1&&startcount==1)
+					{
+						console.log("going to call pause game");
+						pausegame();
+						pauseflag=parseInt(data[6]);
+					}
+					if(pauseflag==0)
+					{
+						if(x!=-1&&y!=-1)
 						{
-							alert("remove flag set for uno=1");
-							removeBodyPart(1,parseInt(removeflag1[1]));
-							acksignal(id,gameboard_id);
+							let row=document.getElementsByName("row");
+							row[x].childNodes[y].style.backgroundColor=foodcolor;
+						}
+						let addflags=data[3].split(",");
+						if(addflags[0]==1)
+						{
+							let dummy=JSON.parse(data[0]);
+							if(dummy.uid!=id)
+							{
+								addBodyPart(1);
+								acksignal(snake1.uid,gameboard_id);
+							}
+						}
+						if(addflags[1]==1)
+						{
+							let dummy=JSON.parse(data[1]);
+							if(dummy.uid!=id)
+							{
+								addBodyPart(2);
+								acksignal(snake2.uid,gameboard_id);
+							}
+						}
+						let removeflag1=data[4].split(",");
+						let removeflag2=data[5].split(",");
+						if(parseInt(removeflag1[0])==1)
+						{
+							//alert("removing u1");
+							let dummy=JSON.parse(data[0]);
+							if(id==dummy.uid)
+							{
+								alert("remove flag set for uno=1");
+								removeBodyPart(1,parseInt(removeflag1[1]));
+								acksignal(id,gameboard_id);
+							}
+						}
+						if(parseInt(removeflag2[0])==1)
+						{
+							//alert("removing u1");
+							let dummy=JSON.parse(data[1]);
+							if(id==dummy.uid)
+							{	
+								alert("remove flag set for uno=2");					
+								removeBodyPart(2,parseInt(removeflag2[1]));
+								acksignal(id,gameboard_id);
+							}
 						}
 					}
-					if(parseInt(removeflag2[0])==1)
-					{
-						//alert("removing u1");
-						let dummy=JSON.parse(data[1]);
-						if(id==dummy.uid)
-						{	
-							alert("remove flag set for uno=2");					
-							removeBodyPart(2,parseInt(removeflag2[1]));
-							acksignal(id,gameboard_id);
-						}
-					}
-				}
-            })			
+				})
+			}
+			else if(withcomputer==1)
+			{
+				source = new EventSource('./computerBoardTeller?gid='+gameboard_id+"&id="+id);
+				var rows=document.getElementsByName("row");
+				console.log("got game board status !!! "+event.data+" length "+event.data.length+" retry "+event);
+				let data=event.data.split("$");	
+				document.getElementsByName("loading")[0].style.display="none";
+				start_snake_action();
+				
+			}
+						
 		}
 		
 
@@ -622,7 +679,14 @@
 					  }
 					};
 					mysnake.uid=id;
-					xhttp.open("GET", "./getid?uid="+id+"&move="+e.keyCode+"&gid="+gameboard_id+"&t=3"+"&object="+JSON.stringify(mysnake), true);
+					if(withcomputer==0)
+					{
+						xhttp.open("GET", "./getid?uid="+id+"&move="+e.keyCode+"&gid="+gameboard_id+"&t=3"+"&object="+JSON.stringify(mysnake)+"&withcomputer="+withcomputer, true);
+					}
+					else if(withcomputer==1)
+					{
+						xhttp.open("GET", "./getid?uid="+id+"&move="+e.keyCode+"&gid="+gameboard_id+"&t=3"+"&object="+JSON.stringify(mysnake)+"&compobject="+JSON.stringify(oppsnake)+"&withcomputer="+withcomputer, true);
+					}
 					xhttp.setRequestHeader("Content-type", "application/json");
 					xhttp.send();
 					capture_snake_positions();
@@ -854,6 +918,11 @@
 			xhttp.open("GET", "./getid?uid="+uid+"&gid="+gameboard_id+"&t=8"+"&s1="+JSON.stringify(snake1)+"&s2="+JSON.stringify(snake2), true);
 			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			xhttp.send();			
+		}
+		
+		function play_with_com()
+		{
+			var source=new EventSource('./computer?gid='+gameboard_id+"&id="+id);
 		}
 	</script>
 </body>
