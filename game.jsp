@@ -58,7 +58,7 @@
 	</div>
 	<div>
 		<center>
-			<span name="loading" style="display:none;z-index:2;position:fixed;left:35vw;top:20vh;"><img src="calibrating.gif" width="400" height="400"></span><table name="table" border="1" style="background-color:black;" cellspacing="1"><tr name="row"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
+			<span name="loading" style="display:none;z-index:2;position:fixed;left:35vw;top:20vh;"><img src="calibrating.gif" width="400" height="400"></span><table name="table" border="0" style="background-color:black;" cellspacing="1"><tr name="row"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
 		</center>
 	</div>
 	<div id="requestbox">
@@ -74,6 +74,8 @@
 		var gameboard_id;
 		var foodcolor="green";
 		var withcomputer=0;
+		var foodX,foodY;
+		var snake1,snake2;
 		function get_live_users()
 		{
 			
@@ -325,6 +327,8 @@
 						if(x!=-1&&y!=-1)
 						{
 							let row=document.getElementsByName("row");
+							foodX=x;
+							foodY=y;
 							row[x].childNodes[y].style.backgroundColor=foodcolor;
 						}
 						let addflags=data[3].split(",");
@@ -452,6 +456,7 @@
 				rows[snake1.body[i].x].childNodes[snake1.body[i].y].style.backgroundColor=snake1.color;
 				rows[snake2.body[i].x].childNodes[snake2.body[i].y].style.backgroundColor=snake2.color;
 			}
+			init2dgrid();
 		}
 		
 		function createBoard()
@@ -925,5 +930,6 @@
 			var source=new EventSource('./computer?gid='+gameboard_id+"&id="+id);
 		}
 	</script>
+	<script type="text/javascript" src="pathfinder.js" rel="javascript"></script>
 </body>
 </html>
