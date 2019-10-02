@@ -2,7 +2,7 @@
 // Represent the grid as a 2-dimensional array
 function init2dgrid()
 {
-	var gridSize = 4;
+	//var gridSize = 4;
 	var grid = [];
 	for (var i=0; i<row_count; i++) {
 	  grid[i] = [];
@@ -153,25 +153,25 @@ var exploreInDirection = function(currentLocation, direction, grid) {
 
 // Create a 4x4 grid
 // Represent the grid as a 2-dimensional array
-var gridSize = 4;
+/*var gridSize = 4;
 var grid = [];
 for (var i=0; i<gridSize; i++) {
   grid[i] = [];
   for (var j=0; j<gridSize; j++) {
     grid[i][j] = 'Empty';
   }
-}
+}*/
 
 // Think of the first index as "distance from the top row"
 // Think of the second index as "distance from the left-most column"
 
 // This is how we would represent the grid with obstacles above
-grid[0][0] = "Start";
+/*grid[0][0] = "Start";
 grid[2][2] = "Goal";
 
 grid[1][1] = "Obstacle";
 grid[1][2] = "Obstacle";
 grid[1][3] = "Obstacle";
-grid[2][1] = "Obstacle";
+grid[2][1] = "Obstacle";*/
 
 console.log(findShortestPath([snake2.body[0].x,snake2.body[0].y], grid));

@@ -75,7 +75,7 @@
 		var foodcolor="green";
 		var withcomputer=0;
 		var foodX,foodY;
-		var snake1,snake2;
+		//var snake1,snake2;
 		function get_live_users()
 		{
 			
@@ -456,7 +456,7 @@
 				rows[snake1.body[i].x].childNodes[snake1.body[i].y].style.backgroundColor=snake1.color;
 				rows[snake2.body[i].x].childNodes[snake2.body[i].y].style.backgroundColor=snake2.color;
 			}
-			init2dgrid();
+			//init2dgrid();
 		}
 		
 		function createBoard()
@@ -930,6 +930,6 @@
 			var source=new EventSource('./computer?gid='+gameboard_id+"&id="+id);
 		}
 	</script>
-	<script type="text/javascript" src="pathfinder.js" rel="javascript"></script>
+	<!--<script type="text/javascript" src="pathfinder.js" rel="javascript"></script>-->
 </body>
 </html>
