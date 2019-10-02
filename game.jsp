@@ -379,13 +379,20 @@
 			}
 			else if(withcomputer==1)
 			{
+				console.log("with computer =1");
 				source = new EventSource('./computerBoardTeller?gid='+gameboard_id+"&id="+id);
 				var rows=document.getElementsByName("row");
-				console.log("got game board status !!! "+event.data+" length "+event.data.length+" retry "+event);
-				let data=event.data.split("$");	
 				document.getElementsByName("loading")[0].style.display="none";
 				start_snake_action();
-				
+				source.addEventListener("boardstatus",bstatus=function(event)
+				{
+					console.log("got game board status !!! "+event.data+" length "+event.data.length+" retry "+event);
+					let data=event.data.split("$");	
+					let foodX=data[0].split(",")[0];
+					let foodY=data[0].split(",")[1];
+					
+					rows[foodX].childNodes[foodY].style.backgroundColor=foodcolor;
+				})
 			}
 						
 		}
