@@ -67,6 +67,7 @@
 		</tr>
 	</table>
 	</div>
+	
 	<script>
 		
 		var id;
@@ -74,7 +75,8 @@
 		var gameboard_id;
 		var foodcolor="green";
 		var withcomputer=0;
-		var foodX,foodY;
+		var foodX=-1,foodY=-1;
+		var compmovequeue=new Array();
 		//var snake1,snake2;
 		function get_live_users()
 		{
@@ -186,7 +188,7 @@
 					//id = this.responseText;
 					let resp="";
 					resp=parseInt(this.responseText);
-					alert(this.responseText.length+" "+this.responseText+" resp="+resp);
+					//alert(this.responseText.length+" "+this.responseText+" resp="+resp);
 					if(resp==-1)
 					{
 						withcomputer=1;
@@ -240,6 +242,7 @@
 				xhttp.send();
 		}
 		var pauseflag=1,startcount=0;
+		var prevfoodX,prevfoodY;
 		function listentogameboard()
 		{
 			document.getElementsByName("loading")[0].style.display="inline-block";
@@ -330,6 +333,8 @@
 							foodX=x;
 							foodY=y;
 							row[x].childNodes[y].style.backgroundColor=foodcolor;
+							//alert("summa");
+
 						}
 						let addflags=data[3].split(",");
 						if(addflags[0]==1)
@@ -392,6 +397,24 @@
 					let foodY=data[0].split(",")[1];
 					
 					rows[foodX].childNodes[foodY].style.backgroundColor=foodcolor;
+					//alert("setting foodX = "+foodX+" foodY = "+foodY);
+					
+					//console.log(findShortestPath([snake2.body[0].x,snake2.body[0].y])+" path");
+					//let moves=findShortestPath([snake2.body[0].x,snake2.body[0].y]);
+					//moves=moves.split("");
+					if(prevfoodX!=foodX || prevfoodY!=foodY)
+					{
+						init2dgrid();
+						//compmovequeue=findShortestPath([snake2.body[0].x,snake2.body[0].y]);
+						setFoodLocation(foodX,foodY);
+						compmovequeue=compmovequeue.concat(findShortestPath([snake2.body[0].x,snake2.body[0].y]));
+						resetCell(foodX,foodY);
+						console.log(compmovequeue+" path");
+						console.log(snake2.body);
+						prevfoodX=foodX;
+						prevfoodY=foodY;
+					}
+
 				})
 			}
 						
@@ -463,7 +486,8 @@
 				rows[snake1.body[i].x].childNodes[snake1.body[i].y].style.backgroundColor=snake1.color;
 				rows[snake2.body[i].x].childNodes[snake2.body[i].y].style.backgroundColor=snake2.color;
 			}
-			//init2dgrid();
+			init2dgrid();
+			//console.log(findShortestPath([snake2.body[0].x,snake2.body[0].y], grid)+" path");
 		}
 		
 		function createBoard()
@@ -473,12 +497,12 @@
 			id=parseInt(sessionStorage.getItem('id'));
 			//alert("id is "+id);
 			var gameboard=document.getElementsByName("gameboard")[0];
-			var row=document.getElementsByName("row")[0];
+			//var row=document.getElementsByName("row")[0];
 			var table=document.getElementsByName("table")[0];
 			var row=document.getElementsByName("row")[0];
 			
 			var i;
-			for(i=0;i<45;i++)
+			for(i=0;i<35;i++)
 			{
 				let newrow=row.cloneNode(true);
 				table.appendChild(newrow);
@@ -513,7 +537,7 @@
 				snake1.body[i].x=snake1.body[i-1].x;
 				snake1.body[i].y=snake1.body[i-1].y;
 			}
-			
+			resetCell(snake2.body[snake2.body.length-1].x,snake2.body[snake2.body.length-1].y);
 			for(i=snake2.body.length-1;i>0;i--)
 			{
 				snake2.body[i].x=snake2.body[i-1].x;
@@ -583,7 +607,19 @@
 				position=i+1;
 				reportmysnakestatus(2,position,gameboard_id,2);
 			}
-			switch(snake2.direction)
+			
+			let snake2dir;
+			let compmove=compmovequeue.shift();
+			if(withcomputer==0||compmove==false)
+			{
+				snake2dir=snake2.direction;
+			}
+			else if(withcomputer==1)
+			{
+				 snake2dir=compmove;
+				 snake2.direction=compmove;
+			}
+			switch(snake2dir)
 			{
 				case 37:
 						if(snake2.body[0].y<=0)
@@ -646,6 +682,8 @@
 				position=i+1;
 				reportmysnakestatus(2,position,gameboard_id,1);
 			}
+			
+
 			redraw_snakes();
 		}
 		
@@ -671,6 +709,7 @@
 			//alert("gameboard id "+gameboard_id);
 			//alert("my snake "+mysnake.color);
 			interval=setInterval(nextmove,120);
+			//console.log(findShortestPath([snake2.body[0].x,snake2.body[0].y])+" path");
 		}
 		
 		document.onkeydown=function(e)
@@ -730,17 +769,20 @@
 			{
 				removeBodyPart(uno,position);
 			}
-			var xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function() 
+			if(withcomputer==0)
 			{
-			  if (this.readyState == 4 && this.status == 200) 
-			  {
-				//mysnake.direction=move;
-			  }
-			};
-			xhttp.open("GET", "./getid?uid="+id+"&operation="+operation+"&position="+position+"&gid="+gid+"&uno="+uno+"&t=5", true);
-			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			xhttp.send();
+				var xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function() 
+				{
+				  if (this.readyState == 4 && this.status == 200) 
+				  {
+					//mysnake.direction=move;
+				  }
+				};
+				xhttp.open("GET", "./getid?uid="+id+"&operation="+operation+"&position="+position+"&gid="+gid+"&uno="+uno+"&t=5", true);
+				xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xhttp.send();
+			}
 		}
 		
 		function addBodyPart(n)
@@ -927,7 +969,7 @@
 			{
 				snake1.winflag=1;
 			}
-			xhttp.open("GET", "./getid?uid="+uid+"&gid="+gameboard_id+"&t=8"+"&s1="+JSON.stringify(snake1)+"&s2="+JSON.stringify(snake2), true);
+			xhttp.open("GET", "./getid?uid="+uid+"&gid="+gameboard_id+"&t=8"+"&s1="+JSON.stringify(snake1)+"&s2="+JSON.stringify(snake2)+"&withcomputer="+withcomputer, true);
 			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			xhttp.send();			
 		}
@@ -937,6 +979,6 @@
 			var source=new EventSource('./computer?gid='+gameboard_id+"&id="+id);
 		}
 	</script>
-	<!--<script type="text/javascript" src="pathfinder.js" rel="javascript"></script>-->
+	<script type="text/javascript" src="pathfinder.js" rel="javascript"></script>
 </body>
 </html>

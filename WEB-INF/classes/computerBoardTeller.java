@@ -59,6 +59,7 @@ public class computerBoardTeller extends HttpServlet
 		output=foodX+","+foodY+"$";
 		PrintWriter out=res.getWriter();
 		out.write("event:boardstatus\n"); 
+		out.write("retry:"+retry+"\n");
 		out.println("data:"+output+"\n\n");
 		//out.write("retry:"+retry+"\n");
 		//out.write("data:"+output+" \n\n");

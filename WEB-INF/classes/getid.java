@@ -259,6 +259,7 @@ public class getid extends HttpServlet
 		{
 			String s1,s2;
 			int gid=Integer.parseInt(req.getParameter("gid"));
+			int withcomputer=Integer.parseInt(req.getParameter("withcomputer"));
 			s1=new String(req.getParameter("s1"));
 			s2=new String(req.getParameter("s2"));
 			for(gameboard g:game.gameboards)
@@ -267,7 +268,14 @@ public class getid extends HttpServlet
 				{
 					g.pauseflag=2;
 					g.u1.snake.setObject(s1);
-					g.u2.snake.setObject(s1);
+					if(withcomputer==0)
+					{
+						g.u2.snake.setObject(s2);
+					}
+					else if(withcomputer==1)
+					{
+						g.c.snake.setObject(s2);
+					}
 					g.u1.status=0;
 					g.u2.status=0;
 				}
