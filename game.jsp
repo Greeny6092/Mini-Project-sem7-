@@ -363,7 +363,7 @@
 							let dummy=JSON.parse(data[0]);
 							if(id==dummy.uid)
 							{
-								alert("remove flag set for uno=1");
+								//alert("remove flag set for uno=1");
 								removeBodyPart(1,parseInt(removeflag1[1]));
 								acksignal(id,gameboard_id);
 							}
@@ -374,7 +374,7 @@
 							let dummy=JSON.parse(data[1]);
 							if(id==dummy.uid)
 							{	
-								alert("remove flag set for uno=2");					
+								//alert("remove flag set for uno=2");					
 								removeBodyPart(2,parseInt(removeflag2[1]));
 								acksignal(id,gameboard_id);
 							}
@@ -515,7 +515,7 @@
 			init_snake();
 			//start_snake_action();
 		}
-		
+		var manualset;
 		function nextmove()
 		{
 			if(snake1.body.length<3)
@@ -609,15 +609,24 @@
 			}
 			
 			let snake2dir;
-			let compmove=compmovequeue.shift();
-			if(withcomputer==0||compmove==false)
+			let compmove;
+			if(compmovequeue.length>0)
+				compmove=compmovequeue.shift();
+			else
+				manualset=1;
+			let headx1;
+			let heady1;
+			if(withcomputer==0||compmove==false||manualset==1)
 			{
 				snake2dir=snake2.direction;
+				manualset=0;
 			}
 			else if(withcomputer==1)
 			{
 				 snake2dir=compmove;
 				 snake2.direction=compmove;
+				 headx1=snake1.body[0].x;
+				 heady1=snake1.body[0].y;
 			}
 			switch(snake2dir)
 			{
@@ -639,16 +648,37 @@
 						else
 						{
 							snake2.body[0].x--;
-						}
+						}						
 						break;
 				case 39:
-						snake2.body[0].y=(snake2.body[0].y+1)%col_count;
+						snake2.body[0].y=(snake2.body[0].y+1)%col_count;					
 						break;
 				case 40:
-						snake2.body[0].x=(snake2.body[0].x+1)%row_count;
+						snake2.body[0].x=(snake2.body[0].x+1)%row_count;					
 						break;						
 			}
 			
+			if(withcomputer==1)
+			{
+				let boundry_limit=4;
+				let boundryl=snake2.body[0].y-boundry_limit;
+				if(boundryl<0)
+				{
+					boundryl+=col_count;
+				}
+				let boundryt=snake2.body[0].x-boundry_limit;
+				if(boundryt<0)
+				{
+					boundryt+=row_count;
+				}	
+				let boundryr=(snake2.body[snake2.body.length-1].y+boundry_limit)%col_count;
+				let boundryd=(snake2.body[snake2.body.length-1].x+boundry_limit)%row_count
+				if(heady1<=boundryr && heady1>=boundryl && headx1>=boundryt && headx1<=boundryd)
+				{
+					//alert("crossed the boundry");
+					getBestMove(-1);
+				}
+			}
 			if(rows[snake2.body[0].x].childNodes[snake2.body[0].y].style.backgroundColor==foodcolor)
 			{
 				reportmysnakestatus(1,0,gameboard_id,2);
@@ -657,30 +687,63 @@
 			if(color==mysnake.color)
 			{
 				//alert("reporting u2");
-				let position,i;
-				x=mysnake.body[0].x;
-				y=mysnake.body[0].y;
-				for(i=1;i<mysnake.body.length;i++)
+				if(withcomputer==0)
 				{
-					if(mysnake.body[i].x==x&&mysnake.body[i].y==y)
-						break;
+					let position,i;
+					x=mysnake.body[0].x;
+					y=mysnake.body[0].y;
+					for(i=1;i<mysnake.body.length;i++)
+					{
+						if(mysnake.body[i].x==x&&mysnake.body[i].y==y)
+							break;
+					}
+					position=i+1;
+					reportmysnakestatus(2,position,gameboard_id,2);
 				}
-				position=i+1;
-				reportmysnakestatus(2,position,gameboard_id,2);
+				else 
+				{
+					let position,i;
+					x=snake2.body[0].x;
+					y=snake2.body[0].y;
+					for(i=1;i<snake2.body.length;i++)
+					{
+						if(snake2.body[i].x==x&&snake2.body[i].y==y)
+							break;
+					}
+					position=i+1;
+					reportmysnakestatus(2,position,gameboard_id,2);
+
+				}
 			}
 			else if(color==snake1.color)
 			{
 				//alert("reporting u2 with other");
-				let position,i;
-				x=mysnake.body[0].x;
-				y=mysnake.body[0].y;
-				for(i=1;i<snake1.body.length;i++)
+				if(withcomputer==0)
 				{
-					if(snake1.body[i].x==x&&snake1.body[i].y==y)
-						break;
+					let position,i;
+					x=mysnake.body[0].x;
+					y=mysnake.body[0].y;
+					for(i=1;i<snake1.body.length;i++)
+					{
+						if(snake1.body[i].x==x&&snake1.body[i].y==y)
+							break;
+					}
+					position=i+1;
+					reportmysnakestatus(2,position,gameboard_id,1);
 				}
-				position=i+1;
-				reportmysnakestatus(2,position,gameboard_id,1);
+				else
+				{
+					let position,i;
+					x=snake2.body[0].x;
+					y=snake2.body[0].y;
+					for(i=1;i<snake1.body.length;i++)
+					{
+						if(snake1.body[i].x==x&&snake1.body[i].y==y)
+							break;
+					}
+					position=i+1;
+					reportmysnakestatus(2,position,gameboard_id,1);					
+				}
 			}
 			
 
@@ -946,7 +1009,14 @@
 			  }
 			};
 			console.log("./getid?uid="+id+"&gid="+gameboard_id+"&t=6"+"&s1="+JSON.stringify(snake1)+"&s2="+JSON.stringify(snake2));
-			xhttp.open("GET", "./getid?uid="+id+"&gid="+gameboard_id+"&t=6"+"&s1="+JSON.stringify(snake1)+"&s2="+JSON.stringify(snake2), true);
+			if(snake1.uid==mysnake.uid)
+			{
+				xhttp.open("GET", "./getid?uid="+id+"&gid="+gameboard_id+"&t=6"+"&s1="+JSON.stringify(snake1)+"&s2="+JSON.stringify(snake2)+"&headx1="+snake1.body[0].x+"&heady1="+snake1.body[0].y+"&headx2="+snake2.body[0].x+"&heady2="+snake2.body[0].y+"&nmove1="+snake1.direction+"&nmove2="+snake2.direction, true);
+			}
+			else if(snake2.uid==mysnake.uid)
+			{
+				xhttp.open("GET", "./getid?uid="+id+"&gid="+gameboard_id+"&t=6"+"&s1="+JSON.stringify(snake2)+"&s2="+JSON.stringify(snake1)+"&headx1="+snake2.body[0].x+"&heady1="+snake2.body[0].y+"&headx2="+snake1.body[0].x+"&heady2="+snake1.body[0].y+"&nmove1="+snake2.direction+"&nmove2="+snake1.direction, true);				
+			}
 			xhttp.setRequestHeader("Content-type", "application/json");
 			xhttp.send();	
 		}
@@ -977,6 +1047,90 @@
 		function play_with_com()
 		{
 			var source=new EventSource('./computer?gid='+gameboard_id+"&id="+id);
+		}
+		
+		function getBestMove(oppdir)
+		{
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() 
+			{
+			  if (this.readyState == 4 && this.status == 200) 
+			  {
+				//mysnake.direction=move;
+				let oppnmove=parseInt(this.responseText);
+				alert("next predicted move :"+oppnmove);
+				take_counter_measures(oppnmove);
+			  }
+			}
+			xhttp.open("GET", "./analyser?id1="+snake1.uid+"&d1="+snake1.direction+"&l1="+snake1.body.length+"&d2="+snake2.direction+"&l2="+snake2.body.length+"&oppdir="+oppdir+"&headx1="+snake1.body[0].x+"&heady1="+snake1.body[0].y, true);
+			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhttp.send();
+		}
+		
+		function take_counter_measures(oppnmove)
+		{
+			let current_move=snake2.direction;
+			switch(oppnmove)
+			{
+				case 37:
+					if(current_move==38)
+					{
+						snake2.direction=37;
+					}
+					if(current_move==39)
+					{
+						snake2.direction=40;
+					}
+					if(current_move==40)
+					{
+						snake2.direction=37;
+					}					
+					break;
+				case 38:
+					if(current_move==37)
+					{
+						snake2.direction=40;
+					}
+					if(current_move==39)
+					{
+						snake2.direction=39;
+					}
+					if(current_move==40)
+					{
+						snake2.direction=37;
+					}
+					break;
+				case 39:
+					if(current_move==37)
+					{
+						snake2.direction=38;
+					}
+					if(current_move==38)
+					{
+						snake2.direction=39;
+					}
+					if(current_move==40)
+					{
+						snake2.direction=39;
+					}				
+					break;
+				case 40:
+					if(current_move==37)
+					{
+						snake2.direction=37;
+					}
+					if(current_move==38)
+					{
+						snake2.direction=37;
+					}
+					if(current_move==39)
+					{
+						snake2.direction=39;
+					}				
+					break;					
+			}
+			//alert("snake2's changed current move "+snake2.direction);
+			manualset=1;
 		}
 	</script>
 	<script type="text/javascript" src="pathfinder.js" rel="javascript"></script>

@@ -202,6 +202,7 @@ public class getid extends HttpServlet
 		{
 			try
 			{
+				int gid=Integer.parseInt(req.getParameter("gid"));
 				out.println("enterd\n");
 				String s1=new String(req.getParameter("s1"));
 				out.println("got s1");
@@ -224,10 +225,18 @@ public class getid extends HttpServlet
 				int id2=o2.getInt("uid");
 				int d2=o2.getInt("direction");
 				int l2=o2.getJSONArray("body").length();
+				int headx1=Integer.parseInt(req.getParameter("headx1"));
+				int heady1=Integer.parseInt(req.getParameter("heady1"));
+				int headx2=Integer.parseInt(req.getParameter("headx2"));
+				int heady2=Integer.parseInt(req.getParameter("heady2"));
+				int nmove1=Integer.parseInt(req.getParameter("nmove1"));
+				int nmove2=Integer.parseInt(req.getParameter("nmove2"));
+				
 				//stmt.execute("create database if not exists snakegame;");
 				//stmt.execute("use snakegame;");
-				stmt.execute("create table if not exists moves (id1 int(3),d1 int(3),l1 int(3),id2 int(3),d2 int(3),l2 int(3));");
-				stmt.execute("insert into moves values("+id1+","+d1+","+l1+","+id2+","+d2+","+l2+");");
+				stmt.execute("create table if not exists moves (gid int(3),id1 int(3),d1 int(3),l1 int(3),headx1 int(3),heady1 int(3),nmove1 int(3),id2 int(3),d2 int(3),l2 int(3),headx2 int(3),heady2 int(3),nmove2 int(3));");
+				stmt.executeUpdate("update moves set nmove1="+nmove1+" ,nmove2="+nmove2+" where gid="+gid+" and nmove1=-1 and nmove2=-1");
+				stmt.execute("insert into moves values("+gid+","+id1+","+d1+","+l1+","+headx1+","+heady1+",-1,"+id2+","+d2+","+l2+","+headx2+","+heady2+",-1);");
 				out.println("inserted");
 				con.close();
 			}
