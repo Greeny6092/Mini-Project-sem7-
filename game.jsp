@@ -1083,7 +1083,17 @@
 		function take_counter_measures(oppnmove)
 		{
 			let current_move=snake2.direction;
-			switch(snake1.direction)
+			let switch_move;
+			if(oppnmove!=-1)
+			{
+				switch_move=oppnmove;
+			}
+			else
+			{
+				switch_move=snake1.direction;
+			}
+			
+			switch(switch_move)
 			{
 				case 37:
 					if(current_move==37)

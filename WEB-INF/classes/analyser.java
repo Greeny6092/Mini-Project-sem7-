@@ -368,47 +368,71 @@ public class analyser extends HttpServlet
 		out.println("finalr "+finalr);
 		double finald=podgivendata/total_final;
 		out.println("finald "+finald);
-		
+		double threshold=0.4;
 		if(finall>finalt)
 		{
 			if(finall>finalr)
 			{
 				if(finall>finald)
 				{
-					out.println("37");
+					if(finall>threshold)
+						out.println("37");
+					else 
+						out.println("-1");
 				}
 				else
 				{
-					out.println("40");
+					if(finald>threshold)
+						out.println("40");
+					else 
+						out.println("-1");
 				}
 			}
 			else if(finalr>finald)
 			{
-				out.println("39");
+				if(finalr>threshold)
+					out.println("39");
+				else 
+					out.println("-1");							
 			}
 			else
 			{
-				out.println("40");
+				if(finald>threshold)
+					out.println("40");
+				else 
+					out.println("-1");				
 			}
 		}
 		else if(finalt>finalr)
 		{
 			if(finalt>finald)
 			{
-				out.println("38");
+				if(finalt>threshold)
+					out.println("38");
+				else 
+					out.println("-1");				
 			}
 			else
 			{
-				out.println("40");
+				if(finald>threshold)
+					out.println("40");
+			else 
+				out.println("-1");				
 			}
 		}
 		else if(finalr>finald)
 		{
-			out.println("39");
+			if(finalr>threshold)
+				out.println("39");
+			else 
+				out.println("-1");
 		}
 		else 
 		{
-			out.println("40");
+			if(finald>threshold)
+				out.println("40");
+			else 
+				out.println("-1");			
 		}
 	}
 	
