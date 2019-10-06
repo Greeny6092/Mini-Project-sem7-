@@ -1,6 +1,8 @@
 // Create a 4x4 grid
 // Represent the grid as a 2-dimensional array
 var grid;
+var visitedlistx=new Array();
+var visitedlisty=new Array();
 function init2dgrid()
 {
 	//var gridSize = 4;
@@ -27,17 +29,38 @@ function init2dgrid()
 		//grid[foodX][foodY] = "Goal";
 }
 
-function setFoodLocation(foodX,foodY)
+function setFoodLocation(foodX,foodY,snake1,snake2)
 {
 	//alert("foodX = "+foodX+" foodY = "+foodY);
+	let i;
 	if(foodX!=-1&&foodY!=-1)
 		grid[foodX][foodY] = "Goal";
+	for(i=0;i<snake1.body.length;i++)
+	{
+		grid[snake1.body[i].x][snake1.body[i].y]="Visited";
+	}
+
+	for(i=0;i<snake2.body.length;i++)
+	{
+		grid[snake2.body[i].x][snake2.body[i].y]="Visited";
+	}
 	console.log("set food location "+foodX+","+foodY);
 }
 
 function resetCell(x,y)
 {
 	grid[x][y]= "Empty";
+}
+
+function resetVisited()
+{
+	let i;
+	for(i=0;i<visitedlistx.length;i++)
+	{
+		let x=visitedlistx.shift();
+		let y=visitedlisty.shift();
+		grid[x][y]="Empty";
+	}
 }
 //grid[1][1] = "Obstacle";
 //grid[1][2] = "Obstacle";
@@ -167,6 +190,8 @@ var exploreInDirection = function(currentLocation, direction) {
   // If this new location is valid, mark it as 'Visited'
   if (newLocation.status == 'Valid') {
     grid[newLocation.distanceFromTop][newLocation.distanceFromLeft] = 'Visited';
+	visitedlistx.push(newLocation.distanceFromTop);
+	visitedlisty.push(newLocation.distanceFromLeft);
   }
   else if(newLocation.status == "Blocked")
   {

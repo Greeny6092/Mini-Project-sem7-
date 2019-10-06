@@ -160,7 +160,7 @@
 							
 						}
 						listentogameboard();
-						
+						init2dgrid();
 						source.removeEventListener("gamestartflag",startflag);
 					}
 					else if(gamestartflag==1&&temp!=gamestartflag&&withcomputer==1)
@@ -393,8 +393,8 @@
 				{
 					console.log("got game board status !!! "+event.data+" length "+event.data.length+" retry "+event);
 					let data=event.data.split("$");	
-					let foodX=data[0].split(",")[0];
-					let foodY=data[0].split(",")[1];
+					foodX=data[0].split(",")[0];
+					foodY=data[0].split(",")[1];
 					
 					rows[foodX].childNodes[foodY].style.backgroundColor=foodcolor;
 					//alert("setting foodX = "+foodX+" foodY = "+foodY);
@@ -404,9 +404,10 @@
 					//moves=moves.split("");
 					if(prevfoodX!=foodX || prevfoodY!=foodY)
 					{
-						init2dgrid();
+						//init2dgrid();
+						resetVisited();
 						//compmovequeue=findShortestPath([snake2.body[0].x,snake2.body[0].y]);
-						setFoodLocation(foodX,foodY);
+						setFoodLocation(foodX,foodY,snake1,snake2);
 						compmovequeue=compmovequeue.concat(findShortestPath([snake2.body[0].x,snake2.body[0].y]));
 						resetCell(foodX,foodY);
 						console.log(compmovequeue+" path");
@@ -619,7 +620,7 @@
 			if(withcomputer==0||compmove==false||manualset==1)
 			{
 				snake2dir=snake2.direction;
-				manualset=0;
+				
 			}
 			else if(withcomputer==1)
 			{
@@ -657,7 +658,7 @@
 						snake2.body[0].x=(snake2.body[0].x+1)%row_count;					
 						break;						
 			}
-			
+
 			if(withcomputer==1)
 			{
 				let boundry_limit=4;
@@ -677,6 +678,18 @@
 				{
 					//alert("crossed the boundry");
 					getBestMove(-1);
+				}
+				else if(manualset==1)
+				{
+					manualset=0;
+					
+					//init2dgrid();
+					resetVisited();
+					//compmovequeue=findShortestPath([snake2.body[0].x,snake2.body[0].y]);
+					setFoodLocation(foodX,foodY,snake1,snake2);
+					compmovequeue.splice(0, compmovequeue.length);
+					compmovequeue=compmovequeue.concat(findShortestPath([snake2.body[0].x,snake2.body[0].y]));
+					//resetCell(foodX,foodY);					
 				}
 			}
 			if(rows[snake2.body[0].x].childNodes[snake2.body[0].y].style.backgroundColor==foodcolor)
@@ -1011,11 +1024,11 @@
 			console.log("./getid?uid="+id+"&gid="+gameboard_id+"&t=6"+"&s1="+JSON.stringify(snake1)+"&s2="+JSON.stringify(snake2));
 			if(snake1.uid==mysnake.uid)
 			{
-				xhttp.open("GET", "./getid?uid="+id+"&gid="+gameboard_id+"&t=6"+"&s1="+JSON.stringify(snake1)+"&s2="+JSON.stringify(snake2)+"&headx1="+snake1.body[0].x+"&heady1="+snake1.body[0].y+"&headx2="+snake2.body[0].x+"&heady2="+snake2.body[0].y+"&nmove1="+snake1.direction+"&nmove2="+snake2.direction, true);
+				xhttp.open("GET", "./getid?uid="+id+"&gid="+gameboard_id+"&t=6"+"&s1="+JSON.stringify(snake1)+"&s2="+JSON.stringify(snake2)+"&headx1="+snake1.body[0].x+"&heady1="+snake1.body[0].y+"&headx2="+snake2.body[0].x+"&heady2="+snake2.body[0].y+"&nmove1="+snake1.direction+"&nmove2="+snake2.direction+"&foodX="+foodX+"&foodY="+foodY, true);
 			}
 			else if(snake2.uid==mysnake.uid)
 			{
-				xhttp.open("GET", "./getid?uid="+id+"&gid="+gameboard_id+"&t=6"+"&s1="+JSON.stringify(snake2)+"&s2="+JSON.stringify(snake1)+"&headx1="+snake2.body[0].x+"&heady1="+snake2.body[0].y+"&headx2="+snake1.body[0].x+"&heady2="+snake1.body[0].y+"&nmove1="+snake2.direction+"&nmove2="+snake1.direction, true);				
+				xhttp.open("GET", "./getid?uid="+id+"&gid="+gameboard_id+"&t=6"+"&s1="+JSON.stringify(snake2)+"&s2="+JSON.stringify(snake1)+"&headx1="+snake2.body[0].x+"&heady1="+snake2.body[0].y+"&headx2="+snake1.body[0].x+"&heady2="+snake1.body[0].y+"&nmove1="+snake2.direction+"&nmove2="+snake1.direction+"&foodX="+foodX+"&foodY="+foodY, true);				
 			}
 			xhttp.setRequestHeader("Content-type", "application/json");
 			xhttp.send();	
@@ -1058,11 +1071,11 @@
 			  {
 				//mysnake.direction=move;
 				let oppnmove=parseInt(this.responseText);
-				alert("next predicted move :"+oppnmove);
+				//alert("next predicted move :"+oppnmove);
 				take_counter_measures(oppnmove);
 			  }
 			}
-			xhttp.open("GET", "./analyser?id1="+snake1.uid+"&d1="+snake1.direction+"&l1="+snake1.body.length+"&d2="+snake2.direction+"&l2="+snake2.body.length+"&oppdir="+oppdir+"&headx1="+snake1.body[0].x+"&heady1="+snake1.body[0].y, true);
+			xhttp.open("GET", "./analyser?id1="+snake1.uid+"&d1="+snake1.direction+"&l1="+snake1.body.length+"&d2="+snake2.direction+"&l2="+snake2.body.length+"&oppdir="+oppdir+"&headx1="+snake1.body[0].x+"&heady1="+snake1.body[0].y+"&dixs="+Math.abs(snake1.body[0].x-snake2.body[0].x)+"&diys="+(snake1.body[0].y-snake2.body[0].y)+"&dix1f="+Math.abs(snake1.body[0].x-foodX)+"&diy1f="+Math.abs(snake1.body[0].y-foodY), true);
 			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			xhttp.send();
 		}
@@ -1070,16 +1083,30 @@
 		function take_counter_measures(oppnmove)
 		{
 			let current_move=snake2.direction;
-			switch(oppnmove)
+			switch(snake1.direction)
 			{
 				case 37:
+					if(current_move==37)
+					{
+						let diff=Math.abs(snake1.body[0].y-snake2.body[0].y);
+						if(diff<=3)
+						{
+							if(snake2.body[0].x>snake1.body[0].x)
+								snake2.direction=40;
+							else
+								snake2.direction=38;
+						}
+					}
 					if(current_move==38)
 					{
 						snake2.direction=37;
 					}
 					if(current_move==39)
 					{
-						snake2.direction=40;
+						if(snake2.body[0].x<snake1.body[0].x)
+							snake2.direction=38;
+						else
+							snake2.direction=40;
 					}
 					if(current_move==40)
 					{
@@ -1087,6 +1114,17 @@
 					}					
 					break;
 				case 38:
+					if(current_move==38)
+					{
+						let diff=Math.abs(snake1.body[0].y-snake2.body[0].y);
+						if(diff<=3)
+						{
+							if(snake2.body[0].x>snake1.body[0].x)
+								snake2.direction=39;
+							else
+								snake2.direction=37;
+						}
+					}				
 					if(current_move==37)
 					{
 						snake2.direction=40;
@@ -1097,13 +1135,30 @@
 					}
 					if(current_move==40)
 					{
-						snake2.direction=37;
+						if(snake2.body[0].y<snake1.body[0].y)
+							snake2.direction=37;
+						else
+							snake2.direction=39;
 					}
 					break;
 				case 39:
+					if(current_move==39)
+					{
+						let diff=Math.abs(snake1.body[0].y-snake2.body[0].y);
+						if(diff<=3)
+						{
+							if(snake2.body[0].x>snake1.body[0].x)
+								snake2.direction=40;
+							else
+								snake2.direction=38;
+						}
+					}				
 					if(current_move==37)
 					{
-						snake2.direction=38;
+						if(snake2.body[0].x<snake1.body[0].x)
+							snake2.direction=38;
+						else
+							snake2.direction=40;
 					}
 					if(current_move==38)
 					{
@@ -1115,13 +1170,27 @@
 					}				
 					break;
 				case 40:
+					if(current_move==40)
+					{
+						let diff=Math.abs(snake1.body[0].y-snake2.body[0].y);
+						if(diff<=3)
+						{
+							if(snake2.body[0].x>snake1.body[0].x)
+								snake2.direction=39;
+							else
+								snake2.direction=37
+						}
+					}				
 					if(current_move==37)
 					{
 						snake2.direction=37;
 					}
 					if(current_move==38)
 					{
-						snake2.direction=37;
+						if(snake2.body[0].y>snake1.body[0].y)
+							snake2.direction=39;
+						else
+							snake2.direction=37;
 					}
 					if(current_move==39)
 					{

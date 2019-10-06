@@ -231,12 +231,17 @@ public class getid extends HttpServlet
 				int heady2=Integer.parseInt(req.getParameter("heady2"));
 				int nmove1=Integer.parseInt(req.getParameter("nmove1"));
 				int nmove2=Integer.parseInt(req.getParameter("nmove2"));
-				
+				int foodX=Integer.parseInt(req.getParameter("foodX"));;
+				int foodY=Integer.parseInt(req.getParameter("foodY"));;
+				int dixs=Math.abs(headx1-headx2);
+				int diys=Math.abs(heady1-heady2);
+				int dix1f=Math.abs(headx1-foodX);
+				int diy1f=Math.abs(heady1-foodY);
 				//stmt.execute("create database if not exists snakegame;");
 				//stmt.execute("use snakegame;");
-				stmt.execute("create table if not exists moves (gid int(3),id1 int(3),d1 int(3),l1 int(3),headx1 int(3),heady1 int(3),nmove1 int(3),id2 int(3),d2 int(3),l2 int(3),headx2 int(3),heady2 int(3),nmove2 int(3));");
+				stmt.execute("create table if not exists moves (gid int(3),id1 int(3),d1 int(3),l1 int(3),headx1 int(3),heady1 int(3),nmove1 int(3),id2 int(3),d2 int(3),l2 int(3),headx2 int(3),heady2 int(3),nmove2 int(3),dixs int(3),diys int(3),dix1f int(3),diy1f int(3));");
 				stmt.executeUpdate("update moves set nmove1="+nmove1+" ,nmove2="+nmove2+" where gid="+gid+" and nmove1=-1 and nmove2=-1");
-				stmt.execute("insert into moves values("+gid+","+id1+","+d1+","+l1+","+headx1+","+heady1+",-1,"+id2+","+d2+","+l2+","+headx2+","+heady2+",-1);");
+				stmt.execute("insert into moves values("+gid+","+id1+","+d1+","+l1+","+headx1+","+heady1+",-1,"+id2+","+d2+","+l2+","+headx2+","+heady2+",-1,"+dixs+","+diys+","+dix1f+","+diy1f+");");
 				out.println("inserted");
 				con.close();
 			}
