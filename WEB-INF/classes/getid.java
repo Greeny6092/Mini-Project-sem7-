@@ -105,6 +105,7 @@ public class getid extends HttpServlet
 		}
 		else if(t==3)
 		{
+			//Reports the snake status to server
 			int gid=Integer.parseInt(req.getParameter("gid"));
 			int move=Integer.parseInt(req.getParameter("move"));
 			int uid=Integer.parseInt(req.getParameter("uid"));
@@ -150,6 +151,7 @@ public class getid extends HttpServlet
 		}
 		else if(t==4)
 		{
+			//food acquired signal
 			int gid=Integer.parseInt(req.getParameter("gid"));
 			for(gameboard g:game.gameboards)
 			{
@@ -162,6 +164,7 @@ public class getid extends HttpServlet
 		}
 		else if(t==5)
 		{
+			//Report the addBodyPart or removeBodyPart Operation
 			int uid=Integer.parseInt(req.getParameter("uid"));
 			int operation=Integer.parseInt(req.getParameter("operation"));
 			int position=Integer.parseInt(req.getParameter("position"));
@@ -200,6 +203,7 @@ public class getid extends HttpServlet
 		}
 		else if(t==6)
 		{
+			//save the current snake to database
 			try
 			{
 				int gid=Integer.parseInt(req.getParameter("gid"));
@@ -252,6 +256,7 @@ public class getid extends HttpServlet
 		}
 		else if(t==7)
 		{
+			//flag reset signal
 			int uid=Integer.parseInt(req.getParameter("uid"));
 			int gid=Integer.parseInt(req.getParameter("gid"));
 			for(gameboard g:game.gameboards)
@@ -271,6 +276,7 @@ public class getid extends HttpServlet
 		}
 		else if(t==8)
 		{
+			//
 			String s1,s2;
 			int gid=Integer.parseInt(req.getParameter("gid"));
 			int withcomputer=Integer.parseInt(req.getParameter("withcomputer"));
