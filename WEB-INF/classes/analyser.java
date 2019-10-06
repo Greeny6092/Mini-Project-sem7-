@@ -57,67 +57,67 @@ public class analyser extends HttpServlet
 			rs=stmt.executeQuery("select count(*) as total from moves;");
 			rs.next();
 			total=rs.getInt(1);
-			out.println("total "+total);
+			//out.println("total "+total);
 			
 			rs=stmt.executeQuery("select count(*) as total from moves where nmove1=37;");
 			rs.next();
 			tol=rs.getInt(1);
-			out.println("tol "+tol);
+			//out.println("tol "+tol);
 			
 			rs=stmt.executeQuery("select count(*) as total from moves where nmove1=38;");
 			rs.next();
 			tot=rs.getInt(1);
-			out.println("tot "+tot);
+			//out.println("tot "+tot);
 			
 			rs=stmt.executeQuery("select count(*) as total from moves where nmove1=39;");
 			rs.next();
 			tor=rs.getInt(1);
-			out.println("tor "+tor);
+			//out.println("tor "+tor);
 			
 			rs=stmt.executeQuery("select count(*) as total from moves where nmove1=40;");
 			rs.next();
 			tod=rs.getInt(1);	
-			out.println("tod "+tod);
+			//out.println("tod "+tod);
 			
 			rs=stmt.executeQuery("select count(*) as total from moves where l1="+l1+";");
 			rs.next();
 			tol1=rs.getInt(1);
-			out.println("tol1 "+tol1);
+			//out.println("tol1 "+tol1);
 			
 			rs=stmt.executeQuery("select count(*) as total from moves where d1="+d1+";");
 			rs.next();
 			tod1=rs.getInt(1);
-			out.println("tod1 "+tod1);
+			//out.println("tod1 "+tod1);
 			
 			rs=stmt.executeQuery("select count(*) as total from moves where headx1="+headx1+";");
 			rs.next();
 			toheadx1=rs.getInt(1);
-			out.println("toheadx1 "+toheadx1);
+			//out.println("toheadx1 "+toheadx1);
 			
 			rs=stmt.executeQuery("select count(*) as total from moves where heady1="+heady1+";");
 			rs.next();
 			toheady1=rs.getInt(1);
-			out.println("toheady1 "+toheady1+"\n");
+			//out.println("toheady1 "+toheady1+"\n");
 			
 			rs=stmt.executeQuery("select count(*) as total from moves where dixs="+dixs+";");
 			rs.next();
 			todixs=rs.getInt(1);
-			out.println("todixs "+todixs+"\n");
+			//out.println("todixs "+todixs+"\n");
 
 			rs=stmt.executeQuery("select count(*) as total from moves where diys="+diys+";");
 			rs.next();
 			todiys=rs.getInt(1);
-			out.println("todiys "+todiys+"\n");
+			//out.println("todiys "+todiys+"\n");
 			
 			rs=stmt.executeQuery("select count(*) as total from moves where dix1f="+dix1f+";");
 			rs.next();
 			todix1f=rs.getInt(1);
-			out.println("todix1f "+todix1f+"\n");		
+			//out.println("todix1f "+todix1f+"\n");		
 
 			rs=stmt.executeQuery("select count(*) as total from moves where diy1f="+diy1f+";");
 			rs.next();
 			todiy1f=rs.getInt(1);
-			out.println("todiy1f "+todiy1f+"\n");				
+			//out.println("todiy1f "+todiy1f+"\n");				
 			
 			/*tol/=total;
 			tor/=total;
@@ -127,142 +127,142 @@ public class analyser extends HttpServlet
 			rs=stmt.executeQuery("select count(*) as total from moves where l1="+l1+" and nmove1=37;");
 			rs.next();
 			todatal1givenl=rs.getInt(1);	
-			out.println("todatal1givenl "+todatal1givenl);			
+			//out.println("todatal1givenl "+todatal1givenl);			
 			rs=stmt.executeQuery("select count(*) as total from moves where l1="+l1+" and nmove1=38;");
 			rs.next();
 			todatal1givent=rs.getInt(1);
-			out.println("todatal1givent "+todatal1givent);	
+			//out.println("todatal1givent "+todatal1givent);	
 			rs=stmt.executeQuery("select count(*) as total from moves where l1="+l1+" and nmove1=39;");
 			rs.next();
 			todatal1givenr=rs.getInt(1);
-			out.println("todatal1givenr "+todatal1givenr);	
+			//out.println("todatal1givenr "+todatal1givenr);	
 			rs=stmt.executeQuery("select count(*) as total from moves where l1="+l1+" and nmove1=40;");
 			rs.next();
 			todatal1givend=rs.getInt(1);
-			out.println("todatal1givend "+todatal1givend);				
+			//out.println("todatal1givend "+todatal1givend);				
 			
 			rs=stmt.executeQuery("select count(*) as total from moves where d1="+d1+" and nmove1=37;");
 			rs.next();
 			todatad1givenl=rs.getInt(1);	
-			out.println("todatad1givenl "+todatad1givenl);				
+			//out.println("todatad1givenl "+todatad1givenl);				
 			rs=stmt.executeQuery("select count(*) as total from moves where d1="+d1+" and nmove1=38;");
 			rs.next();
 			todatad1givent=rs.getInt(1);
-			out.println("todatad1givent "+todatad1givent);				
+			//out.println("todatad1givent "+todatad1givent);				
 			rs=stmt.executeQuery("select count(*) as total from moves where d1="+d1+" and nmove1=39;");
 			rs.next();
 			todatad1givenr=rs.getInt(1);
-			out.println("todatad1givenr "+todatad1givenr);				
+			//out.println("todatad1givenr "+todatad1givenr);				
 			rs=stmt.executeQuery("select count(*) as total from moves where d1="+d1+" and nmove1=40;");
 			rs.next();
 			todatad1givend=rs.getInt(1);		
-			out.println("todatad1givend "+todatad1givend+" \n");				
+			//out.println("todatad1givend "+todatad1givend+" \n");				
 			
 			rs=stmt.executeQuery("select count(*) as total from moves where headx1="+headx1+" and nmove1=37;");
 			rs.next();
 			todataheadx1givenl=rs.getInt(1);		
-			out.println("todataheadx1givenl "+todataheadx1givenl);				
+			//out.println("todataheadx1givenl "+todataheadx1givenl);				
 			rs=stmt.executeQuery("select count(*) as total from moves where headx1="+headx1+" and nmove1=38;");
 			rs.next();
 			todataheadx1givent=rs.getInt(1);
-			out.println("todataheadx1givent "+todataheadx1givent);				
+			//out.println("todataheadx1givent "+todataheadx1givent);				
 			rs=stmt.executeQuery("select count(*) as total from moves where headx1="+headx1+" and nmove1=39;");
 			rs.next();
 			todataheadx1givenr=rs.getInt(1);
-			out.println("todataheadx1givenr "+todataheadx1givenr);				
+			//out.println("todataheadx1givenr "+todataheadx1givenr);				
 			rs=stmt.executeQuery("select count(*) as total from moves where headx1="+headx1+" and nmove1=40;");
 			rs.next();
 			todataheadx1givend=rs.getInt(1);
-			out.println("todataheadx1givend "+todataheadx1givend);							
+			//out.println("todataheadx1givend "+todataheadx1givend);							
 			
 			rs=stmt.executeQuery("select count(*) as total from moves where heady1="+heady1+" and nmove1=37;");
 			rs.next();
 			todataheady1givenl=rs.getInt(1);		
-			out.println("todataheady1givenl "+todataheady1givenl);				
+			//out.println("todataheady1givenl "+todataheady1givenl);				
 			rs=stmt.executeQuery("select count(*) as total from moves where heady1="+heady1+" and nmove1=38;");
 			rs.next();
 			todataheady1givent=rs.getInt(1);
-			out.println("todataheady1givent "+todataheady1givent);				
+			//out.println("todataheady1givent "+todataheady1givent);				
 			rs=stmt.executeQuery("select count(*) as total from moves where heady1="+heady1+" and nmove1=39;");
 			rs.next();
 			todataheady1givenr=rs.getInt(1);
-			out.println("todataheady1givenr "+todataheady1givenr);				
+			//out.println("todataheady1givenr "+todataheady1givenr);				
 			rs=stmt.executeQuery("select count(*) as total from moves where heady1="+heady1+" and nmove1=40;");
 			rs.next();
 			todataheady1givend=rs.getInt(1);
-			out.println("todataheady1givend "+todataheady1givend+" \n");	
+			//out.println("todataheady1givend "+todataheady1givend+" \n");	
 
 			rs=stmt.executeQuery("select count(*) as total from moves where dixs="+dixs+" and nmove1=37;");
 			rs.next();
 			todatadixsgivenl=rs.getInt(1);	
-			out.println("todatadixsgivenl "+todatadixsgivenl);			
+			//out.println("todatadixsgivenl "+todatadixsgivenl);			
 			rs=stmt.executeQuery("select count(*) as total from moves where dixs="+dixs+" and nmove1=38;");
 			rs.next();
 			todatadixsgivent=rs.getInt(1);
-			out.println("todatadixsgivent "+todatadixsgivent);	
+			//out.println("todatadixsgivent "+todatadixsgivent);	
 			rs=stmt.executeQuery("select count(*) as total from moves where dixs="+dixs+" and nmove1=39;");
 			rs.next();
 			todatadixsgivenr=rs.getInt(1);
-			out.println("todatadixsgivenr "+todatadixsgivenr);	
+			//out.println("todatadixsgivenr "+todatadixsgivenr);	
 			rs=stmt.executeQuery("select count(*) as total from moves where dixs="+dixs+" and nmove1=40;");
 			rs.next();
 			todatadixsgivend=rs.getInt(1);
-			out.println("todatadixsgivend "+todatadixsgivend);
+			//out.println("todatadixsgivend "+todatadixsgivend);
 
 			rs=stmt.executeQuery("select count(*) as total from moves where diys="+diys+" and nmove1=37;");
 			rs.next();
 			todatadiysgivenl=rs.getInt(1);	
-			out.println("todatadiysgivenl "+todatadiysgivenl);			
+			//out.println("todatadiysgivenl "+todatadiysgivenl);			
 			rs=stmt.executeQuery("select count(*) as total from moves where diys="+diys+" and nmove1=38;");
 			rs.next();
 			todatadiysgivent=rs.getInt(1);
-			out.println("todatadiysgivent "+todatadiysgivent);	
+			//out.println("todatadiysgivent "+todatadiysgivent);	
 			rs=stmt.executeQuery("select count(*) as total from moves where diys="+diys+" and nmove1=39;");
 			rs.next();
 			todatadiysgivenr=rs.getInt(1);
-			out.println("todatadiysgivenr "+todatadiysgivenr);	
+			//out.println("todatadiysgivenr "+todatadiysgivenr);	
 			rs=stmt.executeQuery("select count(*) as total from moves where diys="+diys+" and nmove1=40;");
 			rs.next();
 			todatadiysgivend=rs.getInt(1);
-			out.println("todatadiysgivend "+todatadiysgivend);	
+			//out.println("todatadiysgivend "+todatadiysgivend);	
 
 			rs=stmt.executeQuery("select count(*) as total from moves where dix1f="+dix1f+" and nmove1=37;");
 			rs.next();
 			todatadix1fgivenl=rs.getInt(1);	
-			out.println("todatadix1fgivenl "+todatadix1fgivenl);			
+			//out.println("todatadix1fgivenl "+todatadix1fgivenl);			
 			rs=stmt.executeQuery("select count(*) as total from moves where dix1f="+dix1f+" and nmove1=38;");
 			rs.next();
 			todatadix1fgivent=rs.getInt(1);
-			out.println("todatadix1fgivent "+todatadix1fgivent);	
+			//out.println("todatadix1fgivent "+todatadix1fgivent);	
 			rs=stmt.executeQuery("select count(*) as total from moves where dix1f="+dix1f+" and nmove1=39;");
 			rs.next();
 			todatadix1fgivenr=rs.getInt(1);
-			out.println("todatadix1fgivenr "+todatadix1fgivenr);	
+			//out.println("todatadix1fgivenr "+todatadix1fgivenr);	
 			rs=stmt.executeQuery("select count(*) as total from moves where dix1f="+dix1f+" and nmove1=40;");
 			rs.next();
 			todatadix1fgivend=rs.getInt(1);
-			out.println("todatadix1fgivend "+todatadix1fgivend);	
+			//out.println("todatadix1fgivend "+todatadix1fgivend);	
 
 			rs=stmt.executeQuery("select count(*) as total from moves where diy1f="+diy1f+" and nmove1=37;");
 			rs.next();
 			todatadiy1fgivenl=rs.getInt(1);	
-			out.println("todatadiy1fgivenl "+todatadiy1fgivenl);			
+			//out.println("todatadiy1fgivenl "+todatadiy1fgivenl);			
 			rs=stmt.executeQuery("select count(*) as total from moves where diy1f="+diy1f+" and nmove1=38;");
 			rs.next();
 			todatadiy1fgivent=rs.getInt(1);
-			out.println("todatadiy1fgivent "+todatadiy1fgivent);	
+			//out.println("todatadiy1fgivent "+todatadiy1fgivent);	
 			rs=stmt.executeQuery("select count(*) as total from moves where diy1f="+diy1f+" and nmove1=39;");
 			rs.next();
 			todatadiy1fgivenr=rs.getInt(1);
-			out.println("todatadiy1fgivenr "+todatadiy1fgivenr);	
+			//out.println("todatadiy1fgivenr "+todatadiy1fgivenr);	
 			rs=stmt.executeQuery("select count(*) as total from moves where diy1f="+diy1f+" and nmove1=40;");
 			rs.next();
 			todatadiy1fgivend=rs.getInt(1);
-			out.println("todatadiy1fgivend "+todatadiy1fgivend);			
+			//out.println("todatadiy1fgivend "+todatadiy1fgivend);			
 		}
 		catch(Exception e)
 		{
-			out.println("Error :"+e);
+			//out.println("Error :"+e);
 		}
 		
 		if(total!=0)
@@ -302,72 +302,72 @@ public class analyser extends HttpServlet
 		podatal1givent=(double)todatal1givent/(double)tot;
 		podatal1givenr=(double)todatal1givenr/(double)tor;
 		podatal1givend=(double)todatal1givend/(double)tod;
-		out.println("podatal1givenl "+podatal1givenl+"\npodatal1givent "+podatal1givent+"\npodatal1givenr "+podatal1givenr+"\npodatal1givend "+podatal1givend+"\n\n");
+		//out.println("podatal1givenl "+podatal1givenl+"\npodatal1givent "+podatal1givent+"\npodatal1givenr "+podatal1givenr+"\npodatal1givend "+podatal1givend+"\n\n");
 	
 		podatad1givenl=(double)todatal1givenl/(double)tol;
 		podatad1givent=(double)todatal1givent/(double)tot;
 		podatad1givenr=(double)todatal1givenr/(double)tor;
 		podatad1givend=(double)todatal1givend/(double)tod;
-		out.println("podatad1givenl "+podatad1givenl+"\npodatad1givent "+podatad1givent+"\npodatad1givenr "+podatad1givenr+"\npodatad1givend "+podatad1givend+"\n\n");
+		//out.println("podatad1givenl "+podatad1givenl+"\npodatad1givent "+podatad1givent+"\npodatad1givenr "+podatad1givenr+"\npodatad1givend "+podatad1givend+"\n\n");
 		
 		podataheadx1givenl=(double)todataheadx1givenl/(double)tol;
 		podataheadx1givent=(double)todataheadx1givent/(double)tot;
 		podataheadx1givenr=(double)todataheadx1givenr/(double)tor;
 		podataheadx1givend=(double)todataheadx1givend/(double)tod;
-		out.println("podataheadx1givenl "+podataheadx1givenl+"\npodataheadx1givent "+podataheadx1givent+"\npodataheadx1givenr "+podataheadx1givenr+"\npodataheadx1givend "+podataheadx1givend+"\n\n");
+		//out.println("podataheadx1givenl "+podataheadx1givenl+"\npodataheadx1givent "+podataheadx1givent+"\npodataheadx1givenr "+podataheadx1givenr+"\npodataheadx1givend "+podataheadx1givend+"\n\n");
 		
 		podataheady1givenl=(double)todataheady1givenl/(double)tol;
 		podataheady1givent=(double)todataheady1givent/(double)tot;
 		podataheady1givenr=(double)todataheady1givenr/(double)tor;
 		podataheady1givend=(double)todataheady1givend/(double)tod;
-		out.println("podataheady1givenl "+podataheady1givenl+"\npodataheady1givent "+podataheady1givent+"\npodataheady1givenr "+podataheady1givenr+"\npodataheady1givend "+podataheady1givend+"\n\n");
+		//out.println("podataheady1givenl "+podataheady1givenl+"\npodataheady1givent "+podataheady1givent+"\npodataheady1givenr "+podataheady1givenr+"\npodataheady1givend "+podataheady1givend+"\n\n");
 		
 		podatadixsgivenl=(double)todatadixsgivenl/(double)tol;
 		podatadixsgivent=(double)todatadixsgivent/(double)tot;
 		podatadixsgivenr=(double)todatadixsgivenr/(double)tor;
 		podatadixsgivend=(double)todatadixsgivend/(double)tod;
-		out.println("podatadixsgivenl "+podatadixsgivenl+"\npodatadixsgivent "+podatadixsgivent+"\npodatadixsgivenr "+podatadixsgivenr+"\npodatadixsgivend "+podatadixsgivend+"\n\n");		
+		//out.println("podatadixsgivenl "+podatadixsgivenl+"\npodatadixsgivent "+podatadixsgivent+"\npodatadixsgivenr "+podatadixsgivenr+"\npodatadixsgivend "+podatadixsgivend+"\n\n");		
 		
 		podatadiysgivenl=(double)todatadiysgivenl/(double)tol;
 		podatadiysgivent=(double)todatadiysgivent/(double)tot;
 		podatadiysgivenr=(double)todatadiysgivenr/(double)tor;
 		podatadiysgivend=(double)todatadiysgivend/(double)tod;
-		out.println("podatadiysgivenl "+podatadiysgivenl+"\npodatadiysgivent "+podatadiysgivent+"\npodatadiysgivenr "+podatadiysgivenr+"\npodatadiysgivend "+podatadiysgivend+"\n\n");				
+		//out.println("podatadiysgivenl "+podatadiysgivenl+"\npodatadiysgivent "+podatadiysgivent+"\npodatadiysgivenr "+podatadiysgivenr+"\npodatadiysgivend "+podatadiysgivend+"\n\n");				
 
 		podatadix1fgivenl=(double)todatadix1fgivenl/(double)tol;
 		podatadix1fgivent=(double)todatadix1fgivent/(double)tot;
 		podatadix1fgivenr=(double)todatadix1fgivenr/(double)tor;
 		podatadix1fgivend=(double)todatadix1fgivend/(double)tod;
-		out.println("podatadix1fgivenl "+podatadix1fgivenl+"\npodatadix1fgivent "+podatadix1fgivent+"\npodatadix1fgivenr "+podatadix1fgivenr+"\npodatadix1fgivend "+podatadix1fgivend+"\n\n");				
+		//out.println("podatadix1fgivenl "+podatadix1fgivenl+"\npodatadix1fgivent "+podatadix1fgivent+"\npodatadix1fgivenr "+podatadix1fgivenr+"\npodatadix1fgivend "+podatadix1fgivend+"\n\n");				
 
 		podatadiy1fgivenl=(double)todatadiy1fgivenl/(double)tol;
 		podatadiy1fgivent=(double)todatadiy1fgivent/(double)tot;
 		podatadiy1fgivenr=(double)todatadiy1fgivenr/(double)tor;
 		podatadiy1fgivend=(double)todatadiy1fgivend/(double)tod;
-		out.println("podatadiy1fgivenl "+podatadiy1fgivenl+"\npodatadiy1fgivent "+podatadiy1fgivent+"\npodatadiy1fgivenr "+podatadiy1fgivenr+"\npodatadiy1fgivend "+podatadiy1fgivend+"\n\n");						
+		//out.println("podatadiy1fgivenl "+podatadiy1fgivenl+"\npodatadiy1fgivent "+podatadiy1fgivent+"\npodatadiy1fgivenr "+podatadiy1fgivenr+"\npodatadiy1fgivend "+podatadiy1fgivend+"\n\n");						
 		
 		polgivendata=podatal1givenl*podatad1givenl*podataheadx1givenl*podataheady1givenl*podatadixsgivenl*podatadiysgivenl*podatadix1fgivenl*podatadiy1fgivenl*pol;
-		out.println("polgivendata "+polgivendata);
+		//out.println("polgivendata "+polgivendata);
 
 		potgivendata=podatal1givent*podatad1givent*podataheadx1givent*podataheady1givent*podatadixsgivent*podatadiysgivent*podatadix1fgivent*podatadiy1fgivent*pot;
-		out.println("potgivendata "+potgivendata);
+		//out.println("potgivendata "+potgivendata);
 	
 		porgivendata=podatal1givenr*podatad1givenr*podataheadx1givenr*podataheady1givenr*podatadixsgivenr*podatadiysgivenr*podatadix1fgivenr*podatadiy1fgivenr*por;
-		out.println("porgivendata "+porgivendata);
+		//out.println("porgivendata "+porgivendata);
 		
 		podgivendata=podatal1givend*podatad1givend*podataheadx1givend*podataheady1givend*podatadixsgivend*podatadiysgivend*podatadix1fgivend*podatadiy1fgivend*pod;
-		out.println("podgivendata "+podgivendata);		
+		//out.println("podgivendata "+podgivendata);		
 		
 		double total_final=polgivendata+potgivendata+porgivendata+podgivendata;
-		out.println("total_final "+total_final);
+		//out.println("total_final "+total_final);
 		double finall=polgivendata/total_final;
-		out.println("finall "+finall);
+		//out.println("finall "+finall);
 		double finalt=potgivendata/total_final;
-		out.println("finalt "+finalt);
+		//out.println("finalt "+finalt);
 		double finalr=porgivendata/total_final;
-		out.println("finalr "+finalr);
+		//out.println("finalr "+finalr);
 		double finald=podgivendata/total_final;
-		out.println("finald "+finald);
+		//out.println("finald "+finald);
 		double threshold=0.4;
 		if(finall>finalt)
 		{
@@ -416,8 +416,8 @@ public class analyser extends HttpServlet
 			{
 				if(finald>threshold)
 					out.println("40");
-			else 
-				out.println("-1");				
+				else 
+					out.println("-1");				
 			}
 		}
 		else if(finalr>finald)
