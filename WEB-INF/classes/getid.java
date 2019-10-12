@@ -301,6 +301,21 @@ public class getid extends HttpServlet
 				}
 			}				
 		}
+		else if(t==9)
+		{
+			int id=Integer.parseInt(req.getParameter("id"));
+			int i=0;
+			for(user u:game.users)
+			{
+				if(u.id==id)
+				{
+					break;
+				}
+				i++;
+			}
+			if(i<game.users.size())
+			game.users.remove(i);
+		}
 	}
 }
 

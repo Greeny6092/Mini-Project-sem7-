@@ -35,7 +35,7 @@
 	
 </style>
 </head>
-<body onload="createBoard()">
+<body onload="createBoard()" onunload="killme()">
 <!--<div style="position:fixed;float:right;display:none;" name="control_board">
 	<table style="background-color:rgba(255,255,255,0.3);border-radius:2vw;">
 	<tr>
@@ -1210,6 +1210,21 @@
 			}
 			//alert("snake2's changed current move "+snake2.direction);
 			manualset=1;
+		}
+		
+		function killme()
+		{
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() 
+			{
+			  if (this.readyState == 4 && this.status == 200) 
+			  {
+
+			  }
+			}
+			xhttp.open("GET", "./getid?id="+id+"&t=9", true);
+			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhttp.send();
 		}
 	</script>
 	<script type="text/javascript" src="pathfinder.js" rel="javascript"></script>
