@@ -661,6 +661,7 @@
 
 			if(withcomputer==1)
 			{
+				
 				let boundry_limit=4;
 				let boundryl=snake2.body[0].y-boundry_limit;
 				if(boundryl<0)
@@ -681,6 +682,7 @@
 				}
 				else if(manualset==1)
 				{
+					//snake2.color="blue";
 					manualset=0;
 					
 					//init2dgrid();
@@ -1087,10 +1089,12 @@
 			if(oppnmove!=-1)
 			{
 				switch_move=oppnmove;
+				snake2.color="yellow";
 			}
 			else
 			{
 				switch_move=snake1.direction;
+				snake2.color="blue";
 			}
 			
 			switch(switch_move)
